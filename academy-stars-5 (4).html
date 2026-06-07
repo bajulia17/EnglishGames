@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academy Stars 5 — Vocabulary Practice</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f4ef;
+  --surface: #ffffff;
+  --surface2: #f0ece4;
+  --border: #e2dbd0;
+  --text: #1a1208;
+  --text2: #6b5e4a;
+  --text3: #a0907c;
+  --green: #2ecc8c;
+  --green-d: #1aab72;
+  --green-l: #d4f5e8;
+  --red: #e74c5e;
+  --red-l: #fde8eb;
+  --amber: #f5a623;
+  --amber-l: #fef3dc;
+  --blue: #3b82f6;
+  --blue-l: #dbeafe;
+  --purple: #8b5cf6;
+  --purple-l: #ede9fe;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ── NAV ── */
+.app-header {
+  background: var(--surface);
+  border-bottom: 2px solid var(--border);
+  padding: 14px 20px;
+  display: flex; align-items: center; gap: 14px;
+  position: sticky; top: 0; z-index: 100;
+}
+.logo { font-size: 22px; font-weight: 900; color: var(--purple); letter-spacing: -0.5px; flex: 1; }
+.logo span { color: var(--purple); }
+.back-btn {
+  background: var(--surface2); border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); padding: 7px 14px;
+  font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700;
+  cursor: pointer; color: var(--text2); transition: background 0.15s;
+}
+.back-btn:hover { background: var(--border); }
+.mode-tabs {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.mode-tab {
+  padding: 7px 14px; border-radius: 30px;
+  font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; border: 1.5px solid var(--border);
+  background: var(--surface); color: var(--text2);
+  transition: all 0.15s;
+}
+.mode-tab.active { background: var(--text); color: #fff; border-color: var(--text); }
+.mode-tab:hover:not(.active) { background: var(--surface2); }
+
+/* ── SCREENS ── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── HOME ── */
+#home { max-width: 720px; margin: 0 auto; padding: 28px 20px; }
+.home-title { font-size: 28px; font-weight: 900; margin-bottom: 6px; }
+.home-sub { font-size: 15px; color: var(--text2); margin-bottom: 24px; }
+.units-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.unit-card {
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: var(--radius); padding: 18px 16px;
+  cursor: pointer; transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+.unit-card:hover { transform: translateY(-3px); border-color: var(--green); box-shadow: 0 6px 20px rgba(46,204,140,0.18); }
+.unit-num { font-size: 12px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.unit-name { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+.unit-topic { font-size: 13px; color: var(--text2); margin-bottom: 10px; }
+.unit-count { font-size: 12px; color: var(--text3); font-weight: 700; }
+.unit-progress { height: 5px; background: var(--border); border-radius: 10px; margin-top: 8px; overflow: hidden; }
+.unit-progress-bar { height: 100%; background: var(--green); border-radius: 10px; transition: width 0.4s; }
+
+/* ── UNIT PAGE ── */
+#unit-page { max-width: 720px; margin: 0 auto; padding: 20px; }
+.unit-page-header { margin-bottom: 20px; }
+.unit-page-title { font-size: 24px; font-weight: 900; }
+.unit-page-topic { font-size: 14px; color: var(--text2); margin-top: 2px; margin-bottom: 16px; }
+.modes-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.mode-card {
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: var(--radius); padding: 16px;
+  cursor: pointer; transition: all 0.15s; text-align: center;
+}
+.mode-card:hover { transform: translateY(-2px); }
+.mode-card.green { border-color: var(--green); }
+.mode-card.green:hover { background: var(--green-l); }
+.mode-card.blue { border-color: var(--blue); }
+.mode-card.blue:hover { background: var(--blue-l); }
+.mode-card.purple { border-color: var(--purple); }
+.mode-card.purple:hover { background: var(--purple-l); }
+.mode-card.amber { border-color: var(--amber); }
+.mode-card.amber:hover { background: var(--amber-l); }
+.mode-emoji { font-size: 32px; margin-bottom: 8px; }
+.mode-title { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+.mode-desc { font-size: 12px; color: var(--text2); line-height: 1.4; }
+
+/* ── FLASHCARDS ── */
+#flashcards-screen { max-width: 520px; margin: 0 auto; padding: 20px; }
+.fc-progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.fc-progress-wrap { flex: 1; height: 8px; background: var(--border); border-radius: 10px; overflow: hidden; }
+.fc-progress-fill { height: 100%; background: var(--green); border-radius: 10px; transition: width 0.4s; }
+.fc-counter { font-size: 13px; color: var(--text2); font-weight: 700; white-space: nowrap; }
+.fc-stats { display: flex; gap: 10px; margin-bottom: 16px; }
+.fc-stat { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 6px 14px; font-size: 13px; font-weight: 700; flex: 1; text-align: center; }
+.fc-stat.know { color: var(--green-d); border-color: var(--green); }
+.fc-stat.dontknow { color: var(--red); border-color: var(--red); }
+
+.card-scene { perspective: 1000px; height: 280px; margin-bottom: 20px; cursor: pointer; }
+.card-wrap {
+  width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+.card-wrap.flipped { transform: rotateY(180deg); }
+.card-face {
+  position: absolute; inset: 0;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 24px; text-align: center;
+  box-shadow: 0 4px 20px rgba(26,18,8,0.08);
+}
+.card-face.back {
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, #1a1208 0%, #2d2016 100%);
+  border-color: #1a1208;
+}
+.card-hint { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; font-weight: 700; }
+.card-emoji { font-size: 40px; margin-bottom: 12px; }
+.card-sentence { font-size: 16px; color: var(--text2); line-height: 1.6; margin-bottom: 10px; }
+.card-sentence .blank { font-size: 17px; font-weight: 800; color: var(--text); letter-spacing: 1px; }
+.card-tap { font-size: 12px; color: var(--text3); margin-top: 8px; }
+.card-word { font-size: 28px; font-weight: 900; color: #fff; margin-bottom: 8px; }
+.card-pos { font-size: 12px; color: #9FE1CB; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 10px; }
+.card-def { font-size: 14px; color: #c8b89a; line-height: 1.5; }
+
+.fc-buttons { display: flex; gap: 12px; }
+.fc-btn {
+  flex: 1; padding: 14px; border-radius: var(--radius);
+  font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800;
+  cursor: pointer; border: none; transition: transform 0.15s;
+}
+.fc-btn:active { transform: scale(0.97); }
+.fc-btn.dont { background: var(--red-l); color: var(--red); }
+.fc-btn.know { background: var(--green-l); color: var(--green-d); }
+.fc-result {
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: var(--radius); padding: 28px; text-align: center;
+}
+.fc-result h2 { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+.fc-result p { font-size: 15px; color: var(--text2); margin-bottom: 20px; }
+.fc-result-stats { display: flex; gap: 12px; justify-content: center; margin-bottom: 20px; }
+.result-stat { background: var(--surface2); border-radius: var(--radius-sm); padding: 10px 20px; text-align: center; }
+.result-stat .num { font-size: 28px; font-weight: 900; }
+.result-stat .lbl { font-size: 12px; color: var(--text2); font-weight: 700; }
+
+/* ── QUIZ ── */
+#quiz-screen { max-width: 600px; margin: 0 auto; padding: 20px; }
+.quiz-q-area { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; text-align: center; }
+.quiz-q-label { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 10px; }
+.quiz-q-emoji { font-size: 36px; margin-bottom: 10px; }
+.quiz-q-text { font-size: 16px; color: var(--text); line-height: 1.6; }
+.quiz-q-text .blank { font-weight: 800; color: var(--text); letter-spacing: 1px; }
+.quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.quiz-opt {
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: var(--radius-sm); padding: 12px 16px;
+  font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: all 0.15s; color: var(--text); text-align: left;
+}
+.quiz-opt:hover:not(.answered) { border-color: var(--blue); background: var(--blue-l); }
+.quiz-opt.correct { background: var(--green-l); border-color: var(--green-d); color: var(--green-d); }
+.quiz-opt.wrong { background: var(--red-l); border-color: var(--red); color: var(--red); }
+.quiz-opt.show-correct { background: var(--green-l); border-color: var(--green-d); color: var(--green-d); }
+.quiz-next {
+  width: 100%; padding: 14px; border-radius: var(--radius);
+  background: var(--text); color: #fff;
+  font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800;
+  border: none; cursor: pointer; display: none;
+}
+.quiz-next.visible { display: block; }
+.quiz-feedback { text-align: center; font-size: 15px; font-weight: 700; min-height: 24px; margin-bottom: 10px; }
+.quiz-feedback.good { color: var(--green-d); }
+.quiz-feedback.bad { color: var(--red); }
+
+/* ── UNSCRAMBLE ── */
+#unscramble-screen { max-width: 600px; margin: 0 auto; padding: 20px; }
+.scramble-letters { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 16px 0; min-height: 54px; }
+.letter-btn {
+  width: 44px; height: 44px; background: var(--surface);
+  border: 2px solid var(--border); border-radius: var(--radius-sm);
+  font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 800;
+  cursor: pointer; transition: all 0.15s; color: var(--text);
+  display: flex; align-items: center; justify-content: center;
+}
+.letter-btn:hover { border-color: var(--purple); background: var(--purple-l); transform: scale(1.1); }
+.letter-btn.used { opacity: 0.25; pointer-events: none; }
+.letter-btn.space-btn { background: var(--surface2); cursor: default; font-size: 12px; color: var(--text3); }
+.answer-slots { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 16px 0; min-height: 54px; }
+.answer-slot {
+  min-width: 44px; height: 44px; background: transparent;
+  border-bottom: 3px solid var(--border);
+  font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text); cursor: pointer; padding: 0 4px;
+  transition: border-color 0.15s;
+}
+.answer-slot.filled { border-bottom-color: var(--purple); }
+.answer-slot.gap-slot { background: transparent; border: none; width: 16px; }
+.answer-slot.correct-slot { border-bottom-color: var(--green-d); color: var(--green-d); }
+.answer-slot.wrong-slot { border-bottom-color: var(--red); color: var(--red); }
+.scramble-btns { display: flex; gap: 10px; margin-top: 10px; justify-content: center; }
+
+/* ── FILL GAPS ── */
+#fill-screen { max-width: 600px; margin: 0 auto; padding: 20px; }
+.fill-word-display {
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; text-align: center;
+}
+.fill-hints { font-size: 22px; font-weight: 900; letter-spacing: 4px; color: var(--text); margin-bottom: 4px; }
+.fill-pos { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+.fill-input-row { display: flex; gap: 10px; }
+.fill-input {
+  flex: 1; padding: 12px 16px; border: 2px solid var(--border);
+  border-radius: var(--radius-sm); font-family: 'Nunito', sans-serif;
+  font-size: 16px; font-weight: 700; color: var(--text);
+  background: var(--surface); outline: none; transition: border-color 0.2s;
+}
+.fill-input:focus { border-color: var(--purple); }
+.fill-input.correct { border-color: var(--green-d); background: var(--green-l); }
+.fill-input.wrong { border-color: var(--red); background: var(--red-l); }
+.fill-hint-text { font-size: 13px; color: var(--text2); margin: 10px 0; line-height: 1.5; }
+
+/* ── WRITE TEST ── */
+#write-screen { max-width: 600px; margin: 0 auto; padding: 20px; }
+.write-q {
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: var(--radius); padding: 24px; margin-bottom: 16px; text-align: center;
+}
+.write-def { font-size: 16px; color: var(--text); line-height: 1.6; margin-bottom: 10px; }
+.write-example { font-size: 14px; color: var(--text2); font-style: italic; line-height: 1.5; }
+.write-example .blank { font-weight: 800; color: var(--text); font-style: normal; letter-spacing: 1px; }
+.write-input-row { display: flex; gap: 10px; margin-bottom: 10px; }
+
+/* ── SHARED ── */
+.mode-header { margin-bottom: 20px; }
+.mode-title-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.mode-badge {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  padding: 4px 12px; border-radius: 20px;
+}
+.badge-green { background: var(--green-l); color: var(--green-d); }
+.badge-blue { background: var(--blue-l); color: var(--blue); }
+.badge-purple { background: var(--purple-l); color: var(--purple); }
+.badge-amber { background: var(--amber-l); color: #854F0B; }
+.mode-h { font-size: 20px; font-weight: 900; color: var(--text); }
+.mode-sub { font-size: 13px; color: var(--text2); }
+.progress-row { display: flex; align-items: center; gap: 10px; margin: 12px 0; }
+.progress-bar-wrap { flex: 1; height: 8px; background: var(--border); border-radius: 10px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: var(--green); border-radius: 10px; transition: width 0.4s; }
+.progress-num { font-size: 13px; color: var(--text2); font-weight: 700; white-space: nowrap; }
+.score-row { display: flex; gap: 10px; margin-bottom: 16px; }
+.score-pill {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: 20px; padding: 5px 14px; font-size: 13px; font-weight: 700; color: var(--text2);
+}
+.score-pill span { color: var(--text); font-weight: 900; }
+
+.action-btn {
+  padding: 12px 24px; border-radius: var(--radius);
+  font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800;
+  cursor: pointer; border: 2px solid var(--border);
+  background: var(--surface); color: var(--text); transition: all 0.15s;
+}
+.action-btn:hover { background: var(--surface2); }
+.action-btn.primary { background: var(--text); color: #fff; border-color: var(--text); }
+.action-btn.primary:hover { background: #2d2016; }
+.action-btn.green { background: var(--green); color: #fff; border-color: var(--green); }
+.action-btn.green:hover { background: var(--green-d); }
+
+.result-screen {
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: var(--radius); padding: 32px 24px; text-align: center;
+}
+.result-screen h2 { font-size: 24px; font-weight: 900; margin-bottom: 8px; }
+.result-screen p { font-size: 15px; color: var(--text2); margin-bottom: 20px; }
+.result-big { font-size: 48px; font-weight: 900; margin-bottom: 4px; }
+.btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+/* ── EDITOR ── */
+#editor-screen { max-width: 700px; margin: 0 auto; padding: 20px 20px 40px; }
+.editor-unit-card {
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: var(--radius); padding: 18px; margin-bottom: 14px;
+}
+.editor-unit-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.editor-unit-num { font-size: 18px; font-weight: 900; flex: 1; }
+.editor-word-list { display: flex; flex-direction: column; gap: 8px; }
+.editor-word-row { display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap; }
+.editor-word-row input {
+  padding: 8px 12px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); font-family: 'Nunito', sans-serif;
+  font-size: 13px; font-weight: 600; color: var(--text); background: var(--bg); outline: none;
+  transition: border-color 0.2s;
+}
+.editor-word-row input:focus { border-color: var(--green); }
+.editor-word-row input.w-word { flex: 1; min-width: 100px; }
+.editor-word-row input.w-def { flex: 2; min-width: 150px; }
+.editor-word-row input.w-ex { flex: 3; min-width: 200px; }
+.editor-word-row input.w-pos { width: 60px; }
+.editor-word-row input.w-emoji { width: 60px; }
+.del-btn {
+  padding: 8px 12px; background: var(--red-l); border: 1.5px solid var(--red);
+  border-radius: var(--radius-sm); font-family: 'Nunito', sans-serif;
+  font-size: 13px; font-weight: 700; color: var(--red); cursor: pointer;
+}
+.editor-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="logo">Academy <span>Stars 5</span></div>
+  <div id="mode-tabs-wrap" class="mode-tabs" style="display:none">
+    <button class="mode-tab" onclick="switchMode('flashcards')">🃏 Cards</button>
+    <button class="mode-tab" onclick="switchMode('quiz')">🧠 Quiz</button>
+    <button class="mode-tab" onclick="switchMode('unscramble')">🔀 Unscramble</button>
+    <button class="mode-tab" onclick="switchMode('fill')">✏️ Fill</button>
+    <button class="mode-tab" onclick="switchMode('write')">📝 Write</button>
+  </div>
+  <button class="back-btn" id="back-btn" style="display:none" onclick="goBack()">← Back</button>
+</div>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div style="max-width:720px;margin:0 auto;padding:28px 20px">
+    <div class="home-title">Vocabulary Practice</div>
+    <div class="home-sub">Choose a unit to start practising</div>
+    <div class="units-grid" id="units-grid"></div>
+    <div style="margin-top:20px;text-align:center">
+      <button class="action-btn" onclick="showScreen('editor-screen');showEditorBack()">✏️ Edit vocabulary</button>
+    </div>
+  </div>
+</div>
+
+<!-- UNIT PAGE -->
+<div id="unit-page" class="screen">
+  <div class="unit-page-header">
+    <div class="unit-page-title" id="up-title"></div>
+    <div class="unit-page-topic" id="up-topic"></div>
+    <div class="modes-row">
+      <div class="mode-card green" onclick="switchMode('flashcards')">
+        <div class="mode-emoji">🃏</div>
+        <div class="mode-title">Flashcards</div>
+        <div class="mode-desc">Swipe right if you know it, left if you don't</div>
+      </div>
+      <div class="mode-card blue" onclick="switchMode('quiz')">
+        <div class="mode-emoji">🧠</div>
+        <div class="mode-title">Quiz</div>
+        <div class="mode-desc">Pick the correct word from 6 options</div>
+      </div>
+      <div class="mode-card purple" onclick="switchMode('unscramble')">
+        <div class="mode-emoji">🔀</div>
+        <div class="mode-title">Unscramble</div>
+        <div class="mode-desc">Put the letters in the right order</div>
+      </div>
+      <div class="mode-card amber" onclick="switchMode('fill')">
+        <div class="mode-emoji">✏️</div>
+        <div class="mode-title">Fill in gaps</div>
+        <div class="mode-desc">Complete the missing letters</div>
+      </div>
+      <div class="mode-card" style="border-color:#e74c5e;cursor:pointer" onclick="switchMode('write')">
+        <div class="mode-emoji">📝</div>
+        <div class="mode-title">Write it!</div>
+        <div class="mode-desc">Final test — type the full word</div>
+      </div>
+      <div class="mode-card" style="border-color:var(--border);cursor:default;opacity:0.5">
+        <div class="mode-emoji">📊</div>
+        <div class="mode-title">Progress</div>
+        <div class="mode-desc" id="unit-progress-text">Complete modes to see progress</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FLASHCARDS -->
+<div id="flashcards-screen" class="screen">
+  <div id="fc-active">
+    <div class="mode-header">
+      <div class="mode-title-row">
+        <span class="mode-badge badge-green">🃏 Flashcards</span>
+        <span class="mode-h" id="fc-unit-name"></span>
+      </div>
+      <div class="mode-sub">Tap card to flip · Know it or still learning?</div>
+    </div>
+    <div class="fc-progress-row">
+      <div class="fc-progress-wrap"><div class="fc-progress-fill" id="fc-prog"></div></div>
+      <div class="fc-counter" id="fc-counter">1/20</div>
+    </div>
+    <div class="fc-stats">
+      <div class="fc-stat know">✓ <span id="fc-know">0</span> know</div>
+      <div class="fc-stat dontknow">✗ <span id="fc-dont">0</span> learning</div>
+    </div>
+    <div class="card-scene" onclick="flipCard()">
+      <div class="card-wrap" id="card-wrap">
+        <div class="card-face front">
+          <div class="card-emoji" id="fc-emoji"></div>
+          <div class="card-sentence" id="fc-sentence"></div>
+          <div class="card-tap">👆 Tap to see the word</div>
+        </div>
+        <div class="card-face back">
+          <div class="card-hint">The word is</div>
+          <div class="card-word" id="fc-word"></div>
+          <div class="card-pos" id="fc-pos"></div>
+          <div class="card-def" id="fc-def"></div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-buttons" id="fc-buttons" style="display:none">
+      <button class="fc-btn dont" onclick="fcAnswer(false)">✗ Still learning</button>
+      <button class="fc-btn know" onclick="fcAnswer(true)">✓ I know it!</button>
+    </div>
+  </div>
+  <div class="fc-result" id="fc-result" style="display:none">
+    <div style="font-size:48px;margin-bottom:12px">🎉</div>
+    <h2>Round complete!</h2>
+    <p id="fc-result-msg"></p>
+    <div class="fc-result-stats">
+      <div class="result-stat"><div class="num" id="fr-know" style="color:var(--green-d)">0</div><div class="lbl">Know it</div></div>
+      <div class="result-stat"><div class="num" id="fr-dont" style="color:var(--red)">0</div><div class="lbl">Learning</div></div>
+    </div>
+    <div class="btn-row">
+      <button class="action-btn" onclick="fcRestart()">↺ Try again</button>
+      <button class="action-btn primary" onclick="showUnitPage()">← Back to modes</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz-screen" class="screen">
+  <div class="mode-header">
+    <div class="mode-title-row">
+      <span class="mode-badge badge-blue">🧠 Quiz</span>
+      <span class="mode-h" id="qz-unit-name"></span>
+    </div>
+    <div class="mode-sub">Choose the correct word from the options</div>
+  </div>
+  <div class="progress-row">
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="qz-prog"></div></div>
+    <div class="progress-num" id="qz-counter">1/20</div>
+  </div>
+  <div class="score-row">
+    <div class="score-pill">⭐ Score: <span id="qz-score">0</span></div>
+    <div class="score-pill">🔥 Streak: <span id="qz-streak">0</span></div>
+  </div>
+  <div id="qz-active">
+    <div class="quiz-q-area">
+      <div class="quiz-q-label" id="qz-label">What word fits?</div>
+      <div class="quiz-q-emoji" id="qz-emoji"></div>
+      <div class="quiz-q-text" id="qz-question"></div>
+    </div>
+    <div class="quiz-feedback" id="qz-feedback"></div>
+    <div class="quiz-options" id="qz-options"></div>
+    <button class="quiz-next" id="qz-next" onclick="quizNext()">Next →</button>
+  </div>
+  <div class="result-screen" id="qz-result" style="display:none">
+    <div style="font-size:48px;margin-bottom:12px" id="qz-result-icon">🏆</div>
+    <h2>Quiz complete!</h2>
+    <div class="result-big" id="qz-result-score"></div>
+    <p id="qz-result-msg"></p>
+    <div class="btn-row">
+      <button class="action-btn" onclick="startQuiz()">↺ Retry</button>
+      <button class="action-btn primary" onclick="showUnitPage()">← Modes</button>
+    </div>
+  </div>
+</div>
+
+<!-- UNSCRAMBLE -->
+<div id="unscramble-screen" class="screen">
+  <div class="mode-header">
+    <div class="mode-title-row">
+      <span class="mode-badge badge-purple">🔀 Unscramble</span>
+      <span class="mode-h" id="un-unit-name"></span>
+    </div>
+    <div class="mode-sub">Tap letters to build the word</div>
+  </div>
+  <div class="progress-row">
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="un-prog"></div></div>
+    <div class="progress-num" id="un-counter">1/20</div>
+  </div>
+  <div id="un-active">
+    <div class="quiz-q-area" style="margin-bottom:12px">
+      <div class="quiz-q-emoji" id="un-emoji"></div>
+      <div class="quiz-q-text" id="un-context" style="font-size:14px;color:var(--text2)"></div>
+    </div>
+    <div class="answer-slots" id="un-slots"></div>
+    <div class="scramble-letters" id="un-letters"></div>
+    <div class="quiz-feedback" id="un-feedback"></div>
+    <div class="scramble-btns">
+      <button class="action-btn" onclick="unClear()">Clear</button>
+      <button class="action-btn primary" onclick="unCheck()">Check ✓</button>
+    </div>
+  </div>
+  <div class="result-screen" id="un-result" style="display:none">
+    <div style="font-size:48px;margin-bottom:12px">🔀</div>
+    <h2>Unscramble done!</h2>
+    <div class="result-big" id="un-result-score"></div>
+    <p id="un-result-msg"></p>
+    <div class="btn-row">
+      <button class="action-btn" onclick="startUnscramble()">↺ Retry</button>
+      <button class="action-btn primary" onclick="showUnitPage()">← Modes</button>
+    </div>
+  </div>
+</div>
+
+<!-- FILL -->
+<div id="fill-screen" class="screen">
+  <div class="mode-header">
+    <div class="mode-title-row">
+      <span class="mode-badge badge-amber">✏️ Fill in gaps</span>
+      <span class="mode-h" id="fl-unit-name"></span>
+    </div>
+    <div class="mode-sub">Complete the word — first letters given</div>
+  </div>
+  <div class="progress-row">
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="fl-prog"></div></div>
+    <div class="progress-num" id="fl-counter">1/20</div>
+  </div>
+  <div id="fl-active">
+    <div class="quiz-q-area" style="margin-bottom:12px;text-align:center">
+      <div class="quiz-q-emoji" id="fl-emoji"></div>
+      <div class="fill-hints" id="fl-hint"></div>
+      <div class="fill-pos" id="fl-pos"></div>
+    </div>
+    <div class="fill-hint-text" id="fl-context"></div>
+    <div class="fill-input-row">
+      <input type="text" class="fill-input" id="fl-input" placeholder="Type the word..." onkeydown="if(event.key==='Enter')fillCheck()">
+      <button class="action-btn primary" onclick="fillCheck()">Check</button>
+    </div>
+    <div class="quiz-feedback" id="fl-feedback" style="margin-top:10px"></div>
+    <button class="quiz-next" id="fl-next" onclick="fillNext()">Next →</button>
+  </div>
+  <div class="result-screen" id="fl-result" style="display:none">
+    <div style="font-size:48px;margin-bottom:12px">✏️</div>
+    <h2>Fill in done!</h2>
+    <div class="result-big" id="fl-result-score"></div>
+    <p id="fl-result-msg"></p>
+    <div class="btn-row">
+      <button class="action-btn" onclick="startFill()">↺ Retry</button>
+      <button class="action-btn primary" onclick="showUnitPage()">← Modes</button>
+    </div>
+  </div>
+</div>
+
+<!-- WRITE -->
+<div id="write-screen" class="screen">
+  <div class="mode-header">
+    <div class="mode-title-row">
+      <span class="mode-badge" style="background:var(--red-l);color:var(--red)">📝 Write it!</span>
+      <span class="mode-h" id="wr-unit-name"></span>
+    </div>
+    <div class="mode-sub">Final test — type the complete word from memory</div>
+  </div>
+  <div class="progress-row">
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="wr-prog"></div></div>
+    <div class="progress-num" id="wr-counter">1/20</div>
+  </div>
+  <div id="wr-active">
+    <div class="write-q">
+      <div class="quiz-q-emoji" id="wr-emoji"></div>
+      <div class="write-def" id="wr-def"></div>
+      <div class="write-example" id="wr-example"></div>
+    </div>
+    <div class="write-input-row">
+      <input type="text" class="fill-input" id="wr-input" placeholder="Type the word or phrase..." onkeydown="if(event.key==='Enter')writeCheck()">
+      <button class="action-btn primary" onclick="writeCheck()">Check</button>
+    </div>
+    <div class="quiz-feedback" id="wr-feedback" style="margin-top:10px"></div>
+    <button class="quiz-next" id="wr-next" onclick="writeNext()">Next →</button>
+  </div>
+  <div class="result-screen" id="wr-result" style="display:none">
+    <div style="font-size:48px;margin-bottom:12px">🏆</div>
+    <h2>Final test done!</h2>
+    <div class="result-big" id="wr-result-score"></div>
+    <p id="wr-result-msg"></p>
+    <div class="btn-row">
+      <button class="action-btn" onclick="startWrite()">↺ Retry</button>
+      <button class="action-btn primary" onclick="showUnitPage()">← Modes</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDITOR -->
+<div id="editor-screen" class="screen">
+  <div style="margin-bottom:16px">
+    <div style="font-size:22px;font-weight:900;margin-bottom:4px">✏️ Edit vocabulary</div>
+    <div style="font-size:13px;color:var(--text2)">Add, edit or remove words for any unit. Changes save automatically.</div>
+  </div>
+  <div id="editor-units"></div>
+  <div class="editor-actions">
+    <button class="action-btn green" onclick="saveEditor()">💾 Save all changes</button>
+    <button class="action-btn" onclick="exportData()">📤 Export JSON</button>
+    <div style="position:relative">
+      <button class="action-btn" onclick="document.getElementById('import-file').click()">📥 Import JSON</button>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+    </div>
+    <button class="action-btn" style="color:var(--red)" onclick="resetData()">↩ Reset to defaults</button>
+  </div>
+</div>
+
+<script>
+// ─── DATA ───
+const DEFAULT_UNITS = [{"id":1,"title":"Unit 1","topic":"It's an emergency!","words":[{"word":"accident","pos":"n","definition":"something bad that happens that often hurts you","example":"Maria had an accident and broke her leg.","emoji":"🚑"},{"word":"alarm","pos":"n","definition":"a sound that lets you know there is danger","example":"We left the building when we heard the fire alarm.","emoji":"🚨"},{"word":"ambulance","pos":"n","definition":"a form of transport that takes people to hospital","example":"I called for an ambulance as soon as I saw the accident.","emoji":"🚑"},{"word":"cooker","pos":"n","definition":"a large machine that you use to cook food","example":"There were flames coming from the cooker.","emoji":"🍳"},{"word":"electricity","pos":"n","definition":"a source of energy that we use to work lights and many machines","example":"We didn't have any electricity during the power cut, so we used candles.","emoji":"⚡"},{"word":"embarrassed","pos":"adj","definition":"feeling uncomfortable and a little stupid","example":"I was so embarrassed when I fell over in front of everyone.","emoji":"😳"},{"word":"emergency","pos":"n","definition":"a serious and often dangerous event that needs immediate action","example":"Call me on this number if there's an emergency.","emoji":"🆘"},{"word":"experiment","pos":"n","definition":"an investigation to test or discover something","example":"We did an experiment to see how plants grow in different places.","emoji":"🔬"},{"word":"explain","pos":"v","definition":"to tell someone about something so it is easy to understand","example":"Can you explain how a computer works?","emoji":"💡"},{"word":"fire drill","pos":"n","definition":"an activity to practise leaving a place quickly so that people know what to do if there is a fire","example":"There was a fire drill at school today to practise for when there's a real fire.","emoji":"🔥"},{"word":"fire engine","pos":"n","definition":"a large vehicle that carries fire fighters and their equipment","example":"They needed three fire engines to put out the fire.","emoji":"🚒"},{"word":"heating","pos":"n","definition":"equipment that makes a building warm","example":"The heating isn't working so it's very cold.","emoji":"🌡️"},{"word":"hit","pos":"v","definition":"to happen, or affect people, with force","example":"The bad news hit him hard.","emoji":"💥"},{"word":"lifeboat","pos":"n","definition":"a small boat carried on a large ship for use in an emergency","example":"Everyone got into the lifeboats when the ship hit a rock.","emoji":"🚤"},{"word":"life jacket","pos":"n","definition":"something you wear to help you float if you fall in water","example":"Everyone on the boat was wearing a life jacket.","emoji":"🦺"},{"word":"power","pos":"n","definition":"electricity","example":"The power went off during the storm.","emoji":"⚡"},{"word":"rehearse","pos":"v","definition":"to practise a piece of music, a play, etc, before you perform it in front of people","example":"We're rehearsing for the concert on Sunday.","emoji":"🎭"},{"word":"rescue boat","pos":"n","definition":"a fast boat that is sent out to help another boat or ship in difficulty","example":"The rescue boat arrived in time to save everyone.","emoji":"⛵"},{"word":"smoke","pos":"n","definition":"a cloud of gases that rises from something that's burning","example":"We could see smoke coming out of the car engine.","emoji":"💨"},{"word":"whisper","pos":"v","definition":"to speak in a very quiet voice","example":"Everyone whispered so they didn't wake the baby.","emoji":"🤫"}]},{"id":2,"title":"Unit 2","topic":"Life in the past","words":[{"word":"build","pos":"v","definition":"to make something by putting parts or materials together","example":"They built a house next to the river.","emoji":"🏗️"},{"word":"burn down","pos":"v","definition":"to destroy something with fire","example":"The forest fire burned down the nearby houses.","emoji":"🔥"},{"word":"bury","pos":"v","definition":"to put something in the ground and cover it","example":"The dog buried a bone in the garden.","emoji":"⛏️"},{"word":"calculator","pos":"n","definition":"a small machine that you use to count and do maths problems","example":"John used a calculator to work out how much his shopping cost.","emoji":"🧮"},{"word":"carpet","pos":"n","definition":"a thick material that covers floors","example":"The room looked much nicer with the new carpet.","emoji":"🏠"},{"word":"communicate","pos":"v","definition":"to send a message or give information to others","example":"The way we communicate has changed a lot over the last 20 years.","emoji":"📡"},{"word":"cottage","pos":"n","definition":"a small house, usually in the countryside","example":"This summer we're going to stay in a cottage by the sea.","emoji":"🏡"},{"word":"dig","pos":"v","definition":"to use a tool to make a hole in the ground","example":"The children dug a big hole on the beach.","emoji":"⛏️"},{"word":"freezing","pos":"adj","definition":"very, very cold","example":"I wore a hat and gloves because it was freezing outside.","emoji":"🥶"},{"word":"guide","pos":"n","definition":"a person who shows people round places of interest","example":"The guide showed us round the museum and gave us lots of information.","emoji":"🗺️"},{"word":"history","pos":"n","definition":"a subject in which you study things that happened in the past","example":"We're learning about Russia in history this term.","emoji":"📜"},{"word":"ink","pos":"n","definition":"a liquid that you use for writing","example":"People used to write with pen and ink.","emoji":"🖊️"},{"word":"kilometre","pos":"n","definition":"a distance of 1,000 metres","example":"We walked five kilometres through the fields today.","emoji":"📏"},{"word":"office","pos":"n","definition":"a building or room where people work","example":"My mum works in an office in town.","emoji":"🏢"},{"word":"oil lamp","pos":"n","definition":"a type of light that works by burning oil","example":"Before there was electricity, many people used oil lamps for light.","emoji":"🪔"},{"word":"portrait","pos":"n","definition":"a picture of a person","example":"She asked the artist to paint a portrait of her son.","emoji":"🖼️"},{"word":"possession","pos":"n","definition":"something that is yours; it belongs to you","example":"My favourite possession is a necklace that my mother gave me.","emoji":"💎"},{"word":"servant","pos":"n","definition":"someone who works for another person in their house","example":"They have a servant to clean and cook for them.","emoji":"🧹"},{"word":"soldier","pos":"n","definition":"a person who works in the army","example":"The soldiers stand outside the palace 24 hours a day.","emoji":"💂"},{"word":"twenty-first century","pos":"n","definition":"the century (100 years) that began on the 1st January of the year 2000","example":"Computers have become very important in the 21st century.","emoji":"💻"},{"word":"vacuum","pos":"v","definition":"to clean with a vacuum cleaner","example":"I helped my mum to vacuum the carpets.","emoji":"🧹"},{"word":"in those days","pos":"phrase","definition":"in the past","example":"In those days, there were no computers or mobile phones.","emoji":"⏰"}]},{"id":3,"title":"Unit 3","topic":"Adventure time","words":[{"word":"act","pos":"v","definition":"to take part as an actor in a play or a film","example":"We're going to watch Tom act in the school play.","emoji":"🎭"},{"word":"bite","pos":"v","definition":"to cut something with your teeth","example":"The cat bit the dog's tail.","emoji":"🦷"},{"word":"camp","pos":"v","definition":"to stay in a tent for a short time","example":"Let's camp near those trees.","emoji":"⛺"},{"word":"coach","pos":"v","definition":"to teach, especially a sport","example":"My brother coaches basketball at the sports club.","emoji":"🏀"},{"word":"compass","pos":"n","definition":"an instrument that helps you find directions","example":"He used a compass to find his way out of the jungle.","emoji":"🧭"},{"word":"delicious","pos":"adj","definition":"very good to eat","example":"That ice cream was delicious.","emoji":"😋"},{"word":"explorer","pos":"n","definition":"someone who travels to a new or unfamiliar place to find out about it","example":"The famous explorer Roald Amundsen discovered the South Pole.","emoji":"🧭"},{"word":"first aid","pos":"n","definition":"simple medical help that you give to a person who is sick or hurt","example":"We gave the cyclist first aid when he fell off his bike.","emoji":"🩹"},{"word":"flame","pos":"n","definition":"the hot, orange part of a fire","example":"There were flames coming from the cooker.","emoji":"🔥"},{"word":"horrible","pos":"adj","definition":"not nice; terrible","example":"There was a horrible smell in the kitchen after the fire.","emoji":"🤢"},{"word":"hot-air balloon","pos":"n","definition":"a type of transport with a large bag of hot air, and a basket which people stand in to travel into the sky","example":"My dad is going for a trip in a hot-air balloon for his birthday.","emoji":"🎈"},{"word":"instructor","pos":"n","definition":"a person who teaches a skill","example":"We've learned a lot from our swimming instructor.","emoji":"👨‍🏫"},{"word":"kayaking","pos":"n","definition":"the activity of travelling in a kayak (a small boat similar to a canoe)","example":"We tried kayaking on the river for the first time yesterday.","emoji":"🛶"},{"word":"landscape","pos":"n","definition":"a large area of countryside","example":"I live in the countryside and the landscape is beautiful.","emoji":"🌄"},{"word":"mosquito","pos":"n","definition":"a small flying insect that bites people","example":"I've got lots of mosquito bites on my arms and legs.","emoji":"🦟"},{"word":"paddle","pos":"n","definition":"a long pole that you use to move a small boat through water","example":"Be careful you don't drop your paddle in the water.","emoji":"🛶"},{"word":"put up (a tent)","pos":"v","definition":"to make a tent ready to use","example":"Let's put up the tent before it gets dark.","emoji":"⛺"},{"word":"rucksack","pos":"n","definition":"a large bag that you carry on your back, often used for camping or climbing","example":"I've got some water and chocolate in my rucksack.","emoji":"🎒"},{"word":"scenery","pos":"n","definition":"the natural features of the countryside","example":"Many tourists visit the island for its beautiful scenery.","emoji":"🌿"},{"word":"skiing","pos":"n","definition":"the activity or sport of moving over snow on skis","example":"I love skiing in the mountains when there's lots of snow.","emoji":"⛷️"},{"word":"sleeping bag","pos":"n","definition":"a long, warm bag that you use for sleeping outside or in a tent","example":"We'll need to take our sleeping bags when we go camping.","emoji":"🛌"},{"word":"strange","pos":"adj","definition":"unusual; difficult to understand","example":"I heard a strange noise outside, but there was no one there.","emoji":"❓"},{"word":"view","pos":"n","definition":"everything that you can see from a particular place","example":"The view from the top of the mountain is amazing.","emoji":"🏔️"},{"word":"wildlife","pos":"n","definition":"the wild animals that live in a particular area","example":"They saw lots of wildlife on the African safari.","emoji":"🦁"}]},{"id":4,"title":"Unit 4","topic":"Cool jobs","words":[{"word":"battery","pos":"n","definition":"an object that produces electricity to provide power for torches, radios, etc.","example":"I need a new battery for my torch.","emoji":"🔋"},{"word":"canteen","pos":"n","definition":"a place, usually in a school, office or factory, where you can buy and eat food","example":"We usually eat in the canteen because the food is really cheap.","emoji":"🍽️"},{"word":"challenging","pos":"adj","definition":"difficult, but interesting and enjoyable","example":"I'm finding school quite challenging this year.","emoji":"💪"},{"word":"clever","pos":"adj","definition":"intelligent; good at learning and understanding things","example":"My sister is very clever so she always does well at school.","emoji":"🧠"},{"word":"cloakroom","pos":"n","definition":"a room where you can leave coats and bags","example":"I left my coat in the cloakroom.","emoji":"🧥"},{"word":"energetic","pos":"adj","definition":"active; full of energy","example":"He's very energetic for an old man – he walks five kilometres every day.","emoji":"⚡"},{"word":"factory","pos":"n","definition":"a building where things are made by machines","example":"My mum worked in a factory when she left school.","emoji":"🏭"},{"word":"flavour","pos":"n","definition":"the taste that food or drink has","example":"My favourite flavour of ice cream is chocolate.","emoji":"🍦"},{"word":"freeze","pos":"v","definition":"to become very, very cold","example":"If you eat ice cream too quickly, your mouth freezes.","emoji":"🥶"},{"word":"gardening","pos":"n","definition":"the activity of working in, and looking after, a garden","example":"I enjoy gardening in spring when there are lots of new flowers.","emoji":"🌱"},{"word":"gardener","pos":"n","definition":"someone who looks after a garden as a job","example":"The school gardener has planted lots of new trees.","emoji":"👩‍🌾"},{"word":"gym","pos":"n","definition":"a large room or hall where people do exercise and sport (short form of gymnasium)","example":"We play basketball in the gym on Mondays.","emoji":"🏋️"},{"word":"interested in","pos":"adj","definition":"liking something and wanting to learn more about it","example":"My son is very interested in computers.","emoji":"🤔"},{"word":"locker","pos":"n","definition":"a small cupboard for keeping clothes and other personal possessions in that you can lock to keep things safe","example":"I keep my books in a locker at school.","emoji":"🔒"},{"word":"pilot","pos":"n","definition":"someone who flies a plane as a job","example":"The pilot flew the plane all the way to Mexico.","emoji":"✈️"},{"word":"polite","pos":"adj","definition":"showing respect for other people","example":"It is polite to say 'please' and 'thank you'.","emoji":"🙏"},{"word":"rewarding","pos":"adj","definition":"making someone feel important or useful","example":"He finds his job as a teacher very rewarding.","emoji":"🌟"},{"word":"safe","pos":"adj","definition":"out of danger","example":"Everyone was safe after the fire fighters rescued them.","emoji":"🛡️"},{"word":"spit","pos":"v","definition":"to force liquid out of your mouth","example":"You spit water into a bowl at the dentist.","emoji":"💧"},{"word":"spoon","pos":"n","definition":"an object used for eating soup or other liquid foods","example":"He ate his soup with a spoon.","emoji":"🥄"},{"word":"university","pos":"n","definition":"a place where some people study after they finish school","example":"She's studying maths at university.","emoji":"🎓"},{"word":"vet","pos":"n","definition":"someone who makes sick animals better as a job","example":"Daisy's cat was ill so she took it to the vet.","emoji":"🐾"}]},{"id":5,"title":"Unit 5","topic":"Getting around","words":[{"word":"backwards","pos":"adv","definition":"towards the direction that is behind you","example":"We moved backwards to get away from the flames.","emoji":"⬅️"},{"word":"crowded","pos":"adj","definition":"full of people","example":"The train was very crowded this morning, I didn't get a seat.","emoji":"👥"},{"word":"cycle path","pos":"n","definition":"part of a road, or a special path, that only people riding bikes can use","example":"The cycle path goes all the way to the town centre.","emoji":"🚴"},{"word":"discount","pos":"n","definition":"a lower price for something","example":"They give you a discount in this shop if you spend more than £60.","emoji":"🏷️"},{"word":"ferry","pos":"n","definition":"a boat that carries people and vehicles a short distance between two or more places","example":"We took the ferry to the island.","emoji":"⛴️"},{"word":"fit","pos":"adj","definition":"healthy and able to do exercise without getting tired","example":"I'm really fit so I'll be able to climb the mountain easily.","emoji":"💪"},{"word":"forwards","pos":"adv","definition":"towards the direction that is in front of you","example":"The bus moved forwards when the traffic lights went green.","emoji":"➡️"},{"word":"hug","pos":"v","definition":"to put your arms round someone to show love or friendship","example":"Leila hugged her mum to thank her for the lovely present.","emoji":"🤗"},{"word":"lift","pos":"v","definition":"to move something to a higher position","example":"I lifted the heavy box and put it on the table.","emoji":"⬆️"},{"word":"old-fashioned","pos":"adj","definition":"not modern; typical of a time in the past","example":"The furniture is very old-fashioned – I prefer modern houses.","emoji":"🕰️"},{"word":"pedal","pos":"v","definition":"to move a bike by moving the pedals with your feet","example":"The boys pedalled up the hill on their bikes.","emoji":"🚴"},{"word":"polluted","pos":"adj","definition":"dirty or dangerous for people to use (usually air or water)","example":"There's a lot traffic in this city so the air is very polluted.","emoji":"🏭"},{"word":"popular","pos":"adj","definition":"liked by a lot of people","example":"Football is a very popular sport.","emoji":"⭐"},{"word":"protect","pos":"v","definition":"to keep someone or something safe","example":"They built a wall to protect the houses from the sea.","emoji":"🛡️"},{"word":"return ticket","pos":"n","definition":"a ticket for travel to a place and back again","example":"I've booked a return ticket for my trip to London.","emoji":"🎟️"},{"word":"safety equipment","pos":"n","definition":"special clothes or objects that keep you safe when you're doing an activity or job","example":"You need safety equipment for skateboarding so you don't get hurt if you fall.","emoji":"⛑️"},{"word":"single ticket","pos":"n","definition":"a ticket to travel to a place, but not back again","example":"I'm going to stay there for a year, so I only bought a single ticket.","emoji":"🎫"},{"word":"skyscraper","pos":"n","definition":"a very tall, modern building, usually containing flats or offices","example":"The view from the top of the skyscraper is amazing.","emoji":"🏙️"},{"word":"ticket office","pos":"n","definition":"a place where you can buy tickets","example":"There's a long queue at the ticket office – I hope we don't miss the train.","emoji":"🎟️"},{"word":"travel card","pos":"n","definition":"a ticket that you can use on a bus or train for more than one journey over a period of time","example":"It's cheaper to buy a travel card than to buy a ticket every day.","emoji":"💳"},{"word":"virtual","pos":"adj","definition":"something on a computer screen that's not real, but looks real","example":"I'm exploring an exciting virtual city on my tablet.","emoji":"💻"},{"word":"workshop","pos":"n","definition":"a place where things are made or repaired","example":"My aunt has a workshop downstairs where she makes jewellery.","emoji":"🔧"}]},{"id":6,"title":"Unit 6","topic":"How is it made?","words":[{"word":"advert","pos":"n","definition":"a short film on TV, or a notice in a newspaper or magazine, etc, that tells you about something you can buy","example":"I saw an advert for a new computer game – I really want to buy it!","emoji":"📺"},{"word":"cheap","pos":"adj","definition":"not expensive; costing little money","example":"The books in this shop are really cheap, I think I'll buy two.","emoji":"🏷️"},{"word":"cotton","pos":"n","definition":"a soft material that comes from a plant and is often used for making clothes","example":"My new shirt is made of cotton.","emoji":"👕"},{"word":"dark","pos":"adj","definition":"strong in colour","example":"She was wearing a dark blue jacket.","emoji":"🎨"},{"word":"denim","pos":"n","definition":"a strong cotton material, usually blue, that is used for making jeans and other clothes","example":"Tom's jacket is made of denim.","emoji":"👖"},{"word":"documentary","pos":"n","definition":"a TV programme that gives you information about real people, places or things","example":"I watched an interesting documentary about cheetahs last night.","emoji":"📹"},{"word":"dye","pos":"n","definition":"a liquid that you use to change the colour of something, usually clothes or hair","example":"I used a purple dye to change the colour of my T-shirt.","emoji":"🎨"},{"word":"glass","pos":"n","definition":"a hard material that you can see through, used for making windows or bottles","example":"Someone broke the kitchen window and there's glass all over the floor.","emoji":"🪟"},{"word":"harvest","pos":"v","definition":"to cut and collect crops, e.g. cotton or wheat, from the fields","example":"The cotton is nearly ready to harvest and send to the factory.","emoji":"🌾"},{"word":"herb","pos":"n","definition":"a plant used in food to add flavour","example":"We added some herbs to the soup to make it taste nice.","emoji":"🌿"},{"word":"jeans","pos":"n","definition":"trousers made of strong cotton material (denim), which are usually blue","example":"We aren't allowed to wear jeans to school.","emoji":"👖"},{"word":"leather","pos":"n","definition":"a strong material that is made from animal skin","example":"Shoes and bags are often made of leather.","emoji":"👞"},{"word":"light","pos":"adj","definition":"not strong in colour","example":"I prefer the light blue T-shirt – it's the same colour as my eyes.","emoji":"🎨"},{"word":"metal","pos":"n","definition":"a hard, strong material such as gold or silver","example":"Bikes are made of different types of metal.","emoji":"⚙️"},{"word":"the news","pos":"n","definition":"a report on TV or the radio that gives you information about recent events","example":"We always watch the news to find out what's happening in the world.","emoji":"📰"},{"word":"plastic","pos":"n","definition":"a material that is often used for making bottles so they don't break","example":"All the garden furniture is made of plastic.","emoji":"🧴"},{"word":"programme","pos":"n","definition":"something you watch on TV or listen to on the radio, e.g. the news or a documentary","example":"This programme is a bit boring - can we watch something else?","emoji":"📺"},{"word":"soft","pos":"adj","definition":"not firm or hard; nice to touch","example":"My cat's fur feels lovely and soft.","emoji":"🐱"},{"word":"special","pos":"adj","definition":"different from, and usually better than, what is usual","example":"Birthdays are always a special day.","emoji":"🎂"},{"word":"throw away","pos":"v","definition":"to put something in the bin because you don't want it","example":"He threw away his old trainers because they were full of holes.","emoji":"🗑️"},{"word":"useful","pos":"adj","definition":"helping you to do something; able to be used in different ways","example":"This pen is very useful – it's got a light on it so you can see in the dark.","emoji":"✏️"},{"word":"wood","pos":"n","definition":"a material that comes from trees","example":"The house is made of wood so it will burn down easily.","emoji":"🪵"},{"word":"yarn","pos":"n","definition":"a long, thin piece of cotton or wool","example":"Cotton is made into yarn in a factory.","emoji":"🧶"}]},{"id":7,"title":"Unit 7","topic":"Music and song","words":[{"word":"accordion","pos":"n","definition":"a musical instrument in the shape of a box, which you hold in your hands","example":"I already play the piano so learning to play the accordion will be easy.","emoji":"🪗"},{"word":"calendar","pos":"n","definition":"a set of pages that show the days, weeks and months of a particular year","example":"She looked at the calendar to check what day the concert was on.","emoji":"📅"},{"word":"catchy","pos":"adj","definition":"describing a song or tune that you like immediately and is easy to remember","example":"His new song is really catchy, I can't stop singing it!","emoji":"🎵"},{"word":"cheerful","pos":"adj","definition":"behaving in a happy way","example":"She is very cheerful today, she's had some good news.","emoji":"😊"},{"word":"classical music","pos":"n","definition":"a more serious style of music written by people such as Mozart or Beethoven","example":"I find listening to classical music very relaxing.","emoji":"🎻"},{"word":"folk music","pos":"n","definition":"the traditional music of the people in a country or region","example":"I love folk music from Scotland and Ireland.","emoji":"🎸"},{"word":"lively","pos":"adj","definition":"full of life and energy","example":"The children are very lively today, they won't sit still.","emoji":"💃"},{"word":"midnight","pos":"n","definition":"12 o'clock at night","example":"I heard the clock strike midnight as I lay awake in the dark.","emoji":"🕛"},{"word":"optimistic","pos":"adj","definition":"having hope about the future; expecting good things to happen","example":"Our coach is optimistic that we'll win the match on Saturday.","emoji":"🌟"},{"word":"orchestra","pos":"n","definition":"a large group of musicians who play many different instruments together, usually classical music","example":"Tom plays the violin in the school orchestra.","emoji":"🎼"},{"word":"perform","pos":"v","definition":"to act, sing, dance or play music in front of a large group of people","example":"They're going to perform at the new concert hall tomorrow.","emoji":"🎤"},{"word":"pop music","pos":"n","definition":"a type of modern music that is very popular, especially with young people","example":"I listen to pop music on the radio every morning.","emoji":"🎵"},{"word":"promote","pos":"v","definition":"to give publicity to something so people like, buy or use it","example":"He's going to promote his music through social media so more people can hear it.","emoji":"📢"},{"word":"rap","pos":"n","definition":"a type of modern music with spoken words and a strong rhythm","example":"I love rap music with its cool words and chants.","emoji":"🎤"},{"word":"rehearsal","pos":"n","definition":"the act of practising a play, concert, etc, before performing it","example":"The rehearsal for the play went well – everyone remembered their words.","emoji":"🎭"},{"word":"rhythm","pos":"n","definition":"a regular, repeated pattern of sounds in music","example":"Everyone clapped to the rhythm of the music.","emoji":"🥁"},{"word":"romantic","pos":"adj","definition":"to do with love or showing love","example":"I don't like romantic films or books – I hate love stories!","emoji":"❤️"},{"word":"tour","pos":"v","definition":"to travel around an area performing in different places","example":"The band is touring the country this month.","emoji":"🗺️"},{"word":"tune","pos":"n","definition":"the sound and rhythm of a song or a piece of music","example":"His new song has a great tune, it's easy to sing along to.","emoji":"🎵"},{"word":"it makes me feel happy","pos":"phrase","definition":"I feel happy when I see / hear it","example":"This song always makes me feel happy.","emoji":"😊"},{"word":"it reminds me of","pos":"phrase","definition":"It makes me think of someone or something","example":"This song reminds me of my summer holiday.","emoji":"💭"}]},{"id":8,"title":"Unit 8","topic":"Tell me a story","words":[{"word":"astonished","pos":"adj","definition":"very, very surprised","example":"I thought she was on holiday so I was astonished to see her there.","emoji":"😲"},{"word":"bad temper","pos":"n","definition":"a strong feeling of anger that someone shows a lot","example":"Emma's got a bad temper – she gets angry very easily.","emoji":"😡"},{"word":"collect","pos":"v","definition":"to go and get something that you have ordered","example":"I went to the chemist's to collect my medicine.","emoji":"📦"},{"word":"emperor","pos":"n","definition":"a man who rules an empire – similar to a king","example":"Julius Caesar was a famous Roman emperor.","emoji":"👑"},{"word":"escape","pos":"v","definition":"to get away from a place where you are in danger; to get free","example":"Everyone escaped from the sinking ship.","emoji":"🏃"},{"word":"forgive","pos":"v","definition":"to stop feeling angry with someone for doing something wrong","example":"I forgot my mum's birthday, but she forgave me.","emoji":"🤝"},{"word":"furious","pos":"adj","definition":"very, very angry","example":"My brother broke a window and my dad was furious.","emoji":"😤"},{"word":"hurt","pos":"v","definition":"to cause someone pain","example":"The dog is very friendly, it won't hurt you.","emoji":"🤕"},{"word":"moral","pos":"n","definition":"a sentence that tells you what a story means and that teaches you something","example":"The moral of the story is that you should think before you make a decision.","emoji":"📖"},{"word":"own","pos":"v","definition":"to have something as a possession","example":"He owns houses all over the world.","emoji":"🏠"},{"word":"palace","pos":"n","definition":"a very large building, usually where a king or queen lives","example":"The king and queen of my country live in a beautiful palace.","emoji":"🏰"},{"word":"powerful","pos":"adj","definition":"strong; having control over people","example":"He's a very powerful leader – everyone does what he says.","emoji":"💪"},{"word":"rescue","pos":"v","definition":"to save someone from danger","example":"The firefighters rescued everyone from the burning building.","emoji":"🚒"},{"word":"rope","pos":"n","definition":"a type of very thick string that you can use to tie or pull things","example":"He tied his horse to a tree with a rope.","emoji":"🪢"},{"word":"swan","pos":"n","definition":"a large white bird with a long neck that lives near water","example":"Swans are beautiful birds, but they can be dangerous.","emoji":"🦢"},{"word":"take place","pos":"v","definition":"to happen","example":"The story takes place in a castle.","emoji":"📍"},{"word":"tied up","pos":"adj","definition":"having a rope around you so you can't move","example":"The thief is tied up so he can't escape.","emoji":"🪢"},{"word":"in trouble","pos":"phrase","definition":"in a difficult situation","example":"There's a bear coming! I think we're in trouble.","emoji":"⚠️"},{"word":"play a trick","pos":"phrase","definition":"to make someone believe something that isn't true","example":"I said my leg was broken, but I was just playing a trick.","emoji":"😜"},{"word":"tell lies","pos":"phrase","definition":"to say things that are not true","example":"My brother always tells lies – I don't believe anything he says.","emoji":"🤥"},{"word":"tell the truth","pos":"phrase","definition":"to say something that is true","example":"She was telling the truth when she said her dad was a famous musician.","emoji":"✅"}]},{"id":9,"title":"Unit 9","topic":"What's your opinion?","words":[{"word":"against","pos":"adj","definition":"not agreeing with something","example":"I'm against the idea of a new shopping centre in our town.","emoji":"❌"},{"word":"app","pos":"n","definition":"a computer program that you download to a smartphone","example":"I've got an app on my phone that helps me make videos.","emoji":"📱"},{"word":"barcode","pos":"n","definition":"a label with lots of lines that gives a computer information about a product","example":"There wasn't a barcode on the box so they couldn't tell us the price.","emoji":"📊"},{"word":"believe","pos":"v","definition":"to think that something is true","example":"I believe that school uniforms are a good thing.","emoji":"💭"},{"word":"blame","pos":"v","definition":"to say or think that someone is responsible for a problem or bad situation","example":"She blames me for the problems she has at school.","emoji":"👉"},{"word":"choice","pos":"n","definition":"the opportunity to choose between different things; a decision","example":"We have a choice between pizza or pasta today.","emoji":"🤔"},{"word":"concentrate","pos":"v","definition":"to give all your attention to the thing you are doing","example":"Please stop talking and concentrate on your work.","emoji":"🎯"},{"word":"debate","pos":"n","definition":"a discussion in which people or groups give different opinions about a subject","example":"The class had a debate about whether advertising is a good or bad thing.","emoji":"💬"},{"word":"diet","pos":"n","definition":"the food you eat every day","example":"A healthy diet will help you learn better.","emoji":"🥗"},{"word":"exam","pos":"n","definition":"an important test in a particular subject (short form of examination)","example":"He's studying for his maths exam tomorrow.","emoji":"📝"},{"word":"for","pos":"adj","definition":"agreeing with or supporting something","example":"I'm for the idea of having healthier food in the canteen.","emoji":"✅"},{"word":"lose","pos":"v","definition":"to be unable to find something; to not have something anymore","example":"I've lost my favourite necklace – I can't find it anywhere.","emoji":"🔍"},{"word":"media","pos":"n","definition":"ways of communicating to a large number of people, such as TV, radio, newspapers and the internet","example":"There's a report in the media about the amount of salt in food.","emoji":"📺"},{"word":"multi-tasking","pos":"n","definition":"doing several different things at the same time","example":"This job needs someone who is good at multi-tasking.","emoji":"🤹"},{"word":"product","pos":"n","definition":"something that is made and then sold","example":"I don't buy products with a lot of added sugar in them.","emoji":"🛒"},{"word":"research","pos":"n","definition":"the careful study of something to find out more about it","example":"I'm doing some research for my history project today.","emoji":"🔬"},{"word":"snack","pos":"n","definition":"a small amount of food that you eat between meals","example":"A healthy snack between meals gives you energy.","emoji":"🍎"},{"word":"sweet","pos":"adj","definition":"tasting like sugar","example":"Fizzy drinks are very sweet because they've got a lot of sugar in them.","emoji":"🍭"},{"word":"teaspoon","pos":"n","definition":"a small spoon that is used for eating or for adding sugar to tea or coffee","example":"I ate my yoghurt with a teaspoon.","emoji":"🥄"},{"word":"unfair","pos":"adj","definition":"not right or equal","example":"Sports competitions are unfair – the same people always win.","emoji":"⚖️"},{"word":"What's wrong?","pos":"phrase","definition":"used to ask someone who looks ill or sad what problem they have","example":"You look unhappy. What's wrong?","emoji":"😟"}]},{"id":10,"title":"Unit 10","topic":"It's a mystery","words":[{"word":"behave","pos":"v","definition":"to be polite; to act in a way that doesn't cause problems","example":"The teacher was happy that the children behaved well on the trip.","emoji":"😊"},{"word":"borrow","pos":"v","definition":"to receive and use something that belongs to another person, and give it back later","example":"Can I borrow your laptop? I'll give it back tomorrow.","emoji":"🤝"},{"word":"break into","pos":"v","definition":"to enter a building by force, usually to steal something","example":"The robbers broke into the museum and stole a painting.","emoji":"🔓"},{"word":"cafeteria","pos":"n","definition":"a restaurant in a school or hospital, etc, where you buy food and take it to the table yourself","example":"I have lunch in the school cafeteria every day.","emoji":"🍽️"},{"word":"clue","pos":"n","definition":"something that helps you solve a crime or find the answer to a question","example":"The footprint in the garden was an important clue.","emoji":"🔍"},{"word":"crime","pos":"n","definition":"an activity or action that is against the law","example":"Robbery is a serious crime.","emoji":"⚖️"},{"word":"culture","pos":"n","definition":"a society that has its own ideas and ways of behaving","example":"The Nazca culture lived in Peru about 2,000 years ago.","emoji":"🌍"},{"word":"flow","pos":"v","definition":"the movement of a liquid in one direction","example":"The river flows through the forest and into the sea.","emoji":"🌊"},{"word":"hobby","pos":"n","definition":"an activity that you enjoy doing in your free time","example":"My hobbies are swimming and karate.","emoji":"🎨"},{"word":"lie","pos":"v","definition":"to say something that isn't true","example":"He lied about where he was yesterday afternoon.","emoji":"🤥"},{"word":"north","pos":"n","definition":"the direction that is usually at the top of a map","example":"Morocco is in the north of Africa.","emoji":"🧭"},{"word":"prove","pos":"v","definition":"to show that something is true","example":"The detective proved that she was the thief.","emoji":"🔍"},{"word":"robbery","pos":"n","definition":"the crime of stealing from somewhere or someone","example":"The thieves stole £100,000 in the bank robbery.","emoji":"💰"},{"word":"remove","pos":"v","definition":"to take something or someone away","example":"I removed the dirty dishes from the table.","emoji":"🗑️"},{"word":"smart","pos":"adj","definition":"looking clean and tidy; dressed in nice clothes","example":"My brother looked very smart in his new suit.","emoji":"👔"},{"word":"solve","pos":"v","definition":"to find out the answer to a problem, crime or mystery","example":"The police solved the crime very quickly.","emoji":"🔍"},{"word":"south","pos":"n","definition":"the direction that is usually at the bottom of a map","example":"London is in the south of England.","emoji":"🧭"},{"word":"statement","pos":"n","definition":"something someone says about a crime and a police officer writes down","example":"He gave a statement about where he was on the night of the robbery.","emoji":"📝"},{"word":"surface","pos":"n","definition":"the outside or the top of something","example":"There was ice on the surface of the water.","emoji":"❄️"},{"word":"suspect","pos":"n","definition":"a person that you think is guilty of a crime","example":"The police are interviewing four suspects about the robbery.","emoji":"🕵️"},{"word":"valuable","pos":"adj","definition":"worth a lot of money","example":"This diamond necklace is extremely valuable.","emoji":"💎"}]}];
+
+const DATA_VERSION = 'as5_v2';
+let units = [];
+let currentUnit = null;
+let currentMode = null;
+
+function loadData() {
+  try {
+    const v = localStorage.getItem('as5_version');
+    if (v === DATA_VERSION) {
+      const s = localStorage.getItem('as5_units');
+      if (s) { units = JSON.parse(s); return; }
+    } else {
+      localStorage.removeItem('as5_units');
+      localStorage.setItem('as5_version', DATA_VERSION);
+    }
+  } catch(e) {}
+  units = JSON.parse(JSON.stringify(DEFAULT_UNITS));
+}
+
+function saveData() {
+  try { localStorage.setItem('as5_units', JSON.stringify(units)); } catch(e) {}
+}
+
+// ─── HINT GENERATOR ───
+function makeHint(word) {
+  return word.split(' ').map(w => {
+    if (w.length <= 1) return w;
+    return w[0] + '_'.repeat(w.length - 1);
+  }).join(' ');
+}
+
+function escapeReg(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+// Build a regex that matches any inflected form of `word` as a complete token.
+// Strategy: find the occurrence in the example sentence directly — the sentence
+// was written to include the word, so we look for the longest contiguous token
+// sequence starting with the same first letter(s) as the target word.
+function findMatchInSentence(example, word) {
+  const target = word.trim();
+  const targetWords = target.split(/\s+/);
+  const n = targetWords.length;
+
+  // Tokenise sentence preserving positions
+  // Each token: { text, start, end, isWord }
+  const tokens = [];
+  const tokenRe = /(\w[\w'-]*|\W+)/g;
+  let m;
+  while ((m = tokenRe.exec(example)) !== null) {
+    tokens.push({ text: m[0], start: m.index, end: m.index + m[0].length, isWord: /\w/.test(m[0]) });
+  }
+
+  const wordTokens = tokens.filter(t => t.isWord);
+
+  // For multi-word targets: match the particle(s) exactly, but the verb flexibly
+  // For single-word: match the stem flexibly
+  function stemOf(w) {
+    w = w.toLowerCase();
+    for (const [sfx, rep] of [
+      ['ied','y'], ['ies','y'],
+      ['ving','v'], ['sing','s'], ['zing','z'], ['cing','c'],
+      ['pping','p'], ['tting','t'], ['nning','n'], ['rring','r'],
+      ['lling','l'], ['gging','g'], ['mming','m'], ['ssing','ss'],
+      ['sed','s'], ['zed','z'], ['ced','c'],
+      ['ing',''], ['ed',''], ['es',''], ['s',''], ['d',''], ['e','']
+    ]) {
+      if (w.endsWith(sfx) && w.length - sfx.length >= 3) {
+        return w.slice(0, w.length - sfx.length) + rep;
+      }
+    }
+    return w;
+  }
+
+  function wordsMatch(sentenceToken, targetToken) {
+    const s = sentenceToken.toLowerCase();
+    const t = targetToken.toLowerCase();
+    if (s === t) return true;
+    const ss = stemOf(s), st = stemOf(t);
+    if (ss === st) return true;
+    // prefix match on stems (handles rehearse/rehearsing, etc.)
+    const minLen = Math.min(ss.length, st.length);
+    if (minLen >= 4 && (ss.startsWith(st.slice(0, minLen)) || st.startsWith(ss.slice(0, minLen)))) return true;
+    return false;
+  }
+
+  // Try to find a sequence of n word-tokens where first matches target[0], rest match exactly
+  for (let i = 0; i <= wordTokens.length - n; i++) {
+    let allMatch = true;
+    for (let j = 0; j < n; j++) {
+      const tgt = targetWords[j].toLowerCase();
+      const tok = wordTokens[i + j].text.toLowerCase();
+      if (j === 0) {
+        if (!wordsMatch(tok, tgt)) { allMatch = false; break; }
+      } else {
+        // particles / prepositions must match exactly
+        if (tok !== tgt) { allMatch = false; break; }
+      }
+    }
+    if (allMatch) {
+      // Found! Return the span [start, end] in the original string
+      const start = wordTokens[i].start;
+      const end = wordTokens[i + n - 1].end;
+      const matched = example.slice(start, end);
+      return { start, end, matched };
+    }
+  }
+  return null; // not found
+}
+
+function makeSentenceWithHint(example, word) {
+  const found = findMatchInSentence(example, word);
+  if (!found) {
+    // fallback: append hint
+    return example + ' <span class="blank">' + makeHint(word) + '</span>';
+  }
+  // Hint = first-letters of the MATCHED text (the actual conjugated form)
+  const hint = makeHint(found.matched);
+  return example.slice(0, found.start) +
+    '<span class="blank">' + hint + '</span>' +
+    example.slice(found.end);
+}
+
+function makeSentenceWithBlank(example, word) {
+  const found = findMatchInSentence(example, word);
+  if (!found) return example + ' <span class="blank">_____</span>';
+  return example.slice(0, found.start) +
+    '<span class="blank">_____</span>' +
+    example.slice(found.end);
+}
+
+function makeSentenceTextHint(example, word) {
+  const found = findMatchInSentence(example, word);
+  if (!found) return example + ' [' + makeHint(word) + ']';
+  const hint = makeHint(found.matched);
+  return example.slice(0, found.start) + hint + example.slice(found.end);
+}
+
+// For fill/write checking: the correct answer is the matched form in the sentence
+function getCorrectForm(example, word) {
+  const found = findMatchInSentence(example, word);
+  return found ? found.matched : word;
+}
+
+// ─── SCREENS ───
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function goBack() {
+  if (currentMode) { showUnitPage(); return; }
+  if (currentUnit) { showHome(); return; }
+  showHome();
+}
+
+function showHome() {
+  currentUnit = null; currentMode = null;
+  document.getElementById('back-btn').style.display = 'none';
+  document.getElementById('mode-tabs-wrap').style.display = 'none';
+  showScreen('home');
+  renderHome();
+}
+
+function showUnitPage() {
+  currentMode = null;
+  document.getElementById('back-btn').style.display = 'block';
+  document.getElementById('mode-tabs-wrap').style.display = 'none';
+  document.getElementById('up-title').textContent = currentUnit.title;
+  document.getElementById('up-topic').textContent = currentUnit.topic + ' · ' + currentUnit.words.length + ' words';
+  showScreen('unit-page');
+}
+
+function showEditorBack() {
+  document.getElementById('back-btn').style.display = 'block';
+  document.getElementById('mode-tabs-wrap').style.display = 'none';
+  renderEditor();
+}
+
+// ─── HOME ───
+function renderHome() {
+  const grid = document.getElementById('units-grid');
+  grid.innerHTML = '';
+  units.forEach(u => {
+    const card = document.createElement('div');
+    card.className = 'unit-card';
+    card.innerHTML = `
+      <div class="unit-num">${u.title}</div>
+      <div class="unit-name">${u.topic}</div>
+      <div class="unit-count">${u.words.length} words</div>
+      <div class="unit-progress"><div class="unit-progress-bar" style="width:0%"></div></div>
+    `;
+    card.onclick = () => { currentUnit = u; showUnitPage(); };
+    grid.appendChild(card);
+  });
+}
+
+// ─── MODE SWITCH ───
+function switchMode(mode) {
+  currentMode = mode;
+  document.getElementById('back-btn').style.display = 'block';
+  document.getElementById('mode-tabs-wrap').style.display = 'flex';
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.mode-tab').forEach(t => {
+    if (t.textContent.toLowerCase().includes(mode === 'flashcards' ? 'card' : mode === 'quiz' ? 'quiz' : mode === 'unscramble' ? 'unscramble' : mode === 'fill' ? 'fill' : 'write')) t.classList.add('active');
+  });
+  if (mode === 'flashcards') startFlashcards();
+  else if (mode === 'quiz') startQuiz();
+  else if (mode === 'unscramble') startUnscramble();
+  else if (mode === 'fill') startFill();
+  else if (mode === 'write') startWrite();
+}
+
+// ─── FLASHCARDS ───
+let fcWords = [], fcIdx = 0, fcKnow = 0, fcDont = 0, fcFlipped = false;
+
+function startFlashcards() {
+  fcWords = shuffle([...currentUnit.words]);
+  fcIdx = 0; fcKnow = 0; fcDont = 0; fcFlipped = false;
+  document.getElementById('fc-unit-name').textContent = currentUnit.title;
+  document.getElementById('fc-active').style.display = 'block';
+  document.getElementById('fc-result').style.display = 'none';
+  document.getElementById('fc-buttons').style.display = 'none';
+  showScreen('flashcards-screen');
+  fcShowCard();
+}
+
+function fcShowCard() {
+  if (fcIdx >= fcWords.length) { fcShowResult(); return; }
+  const w = fcWords[fcIdx];
+  fcFlipped = false;
+  document.getElementById('card-wrap').classList.remove('flipped');
+  document.getElementById('fc-buttons').style.display = 'none';
+  document.getElementById('fc-emoji').textContent = w.emoji || '📖';
+  document.getElementById('fc-sentence').innerHTML = makeSentenceWithHint(w.example, w.word);
+  document.getElementById('fc-word').textContent = w.word;
+  document.getElementById('fc-pos').textContent = '(' + w.pos + ')';
+  document.getElementById('fc-def').textContent = w.definition;
+  const pct = Math.round((fcIdx / fcWords.length) * 100);
+  document.getElementById('fc-prog').style.width = pct + '%';
+  document.getElementById('fc-counter').textContent = (fcIdx + 1) + '/' + fcWords.length;
+  document.getElementById('fc-know').textContent = fcKnow;
+  document.getElementById('fc-dont').textContent = fcDont;
+}
+
+function flipCard() {
+  if (fcFlipped) return;
+  fcFlipped = true;
+  document.getElementById('card-wrap').classList.add('flipped');
+  document.getElementById('fc-buttons').style.display = 'flex';
+}
+
+function fcAnswer(know) {
+  if (know) fcKnow++; else fcDont++;
+  fcIdx++;
+  fcShowCard();
+}
+
+function fcShowResult() {
+  document.getElementById('fc-active').style.display = 'none';
+  document.getElementById('fc-result').style.display = 'block';
+  document.getElementById('fr-know').textContent = fcKnow;
+  document.getElementById('fr-dont').textContent = fcDont;
+  const pct = Math.round(fcKnow / fcWords.length * 100);
+  document.getElementById('fc-result-msg').textContent =
+    pct >= 80 ? `Amazing! You know ${pct}% of the words! 🌟` :
+    pct >= 50 ? `Good progress! Keep practising the ${fcDont} you're still learning.` :
+    `Keep going! Review the cards again — you'll get them! 💪`;
+}
+
+function fcRestart() { startFlashcards(); }
+
+// ─── QUIZ ───
+let qzWords = [], qzIdx = 0, qzScore = 0, qzStreak = 0, qzAnswered = false;
+
+function startQuiz() {
+  qzWords = shuffle([...currentUnit.words]);
+  qzIdx = 0; qzScore = 0; qzStreak = 0; qzAnswered = false;
+  document.getElementById('qz-unit-name').textContent = currentUnit.title;
+  document.getElementById('qz-active').style.display = 'block';
+  document.getElementById('qz-result').style.display = 'none';
+  showScreen('quiz-screen');
+  qzShowQuestion();
+}
+
+function qzShowQuestion() {
+  if (qzIdx >= qzWords.length) { qzShowResult(); return; }
+  const w = qzWords[qzIdx];
+  qzAnswered = false;
+  document.getElementById('qz-feedback').textContent = '';
+  document.getElementById('qz-feedback').className = 'quiz-feedback';
+  document.getElementById('qz-next').classList.remove('visible');
+  document.getElementById('qz-score').textContent = qzScore;
+  document.getElementById('qz-streak').textContent = qzStreak;
+  const pct = Math.round(qzIdx / qzWords.length * 100);
+  document.getElementById('qz-prog').style.width = pct + '%';
+  document.getElementById('qz-counter').textContent = (qzIdx+1) + '/' + qzWords.length;
+
+  const type = Math.random() < 0.5 ? 'sentence' : 'definition';
+  if (type === 'sentence') {
+    document.getElementById('qz-label').textContent = 'Which word completes the sentence?';
+    document.getElementById('qz-emoji').textContent = w.emoji || '📖';
+    document.getElementById('qz-question').innerHTML = makeSentenceWithHint(w.example, w.word);
+  } else {
+    document.getElementById('qz-label').textContent = 'Which word matches the definition?';
+    document.getElementById('qz-emoji').textContent = w.emoji || '📖';
+    document.getElementById('qz-question').textContent = w.definition;
+  }
+
+  const pool = currentUnit.words.filter(x => x.word !== w.word);
+  const distractors = shuffle(pool).slice(0, 5).map(x => x.word);
+  const options = shuffle([w.word, ...distractors]);
+
+  const grid = document.getElementById('qz-options');
+  grid.innerHTML = '';
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = opt;
+    btn.onclick = () => qzAnswer(opt, w.word, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function qzAnswer(chosen, correct, btn) {
+  if (qzAnswered) return;
+  qzAnswered = true;
+  const fb = document.getElementById('qz-feedback');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    qzScore += 10 + qzStreak * 2;
+    qzStreak++;
+    fb.textContent = '✓ Correct! ' + (qzStreak > 1 ? '🔥 Streak x' + qzStreak : '');
+    fb.className = 'quiz-feedback good';
+  } else {
+    btn.classList.add('wrong');
+    qzStreak = 0;
+    fb.textContent = '✗ The answer was: ' + correct;
+    fb.className = 'quiz-feedback bad';
+    document.querySelectorAll('.quiz-opt').forEach(b => { if (b.textContent === correct) b.classList.add('show-correct'); });
+  }
+  document.querySelectorAll('.quiz-opt').forEach(b => b.classList.add('answered'));
+  document.getElementById('qz-next').classList.add('visible');
+  document.getElementById('qz-score').textContent = qzScore;
+  document.getElementById('qz-streak').textContent = qzStreak;
+}
+
+function quizNext() { qzIdx++; qzShowQuestion(); }
+
+function qzShowResult() {
+  document.getElementById('qz-active').style.display = 'none';
+  document.getElementById('qz-result').style.display = 'block';
+  const pct = Math.round(qzScore / (qzWords.length * 12) * 100);
+  document.getElementById('qz-result-icon').textContent = pct >= 80 ? '🏆' : pct >= 50 ? '🌟' : '💪';
+  document.getElementById('qz-result-score').textContent = qzScore + ' pts';
+  document.getElementById('qz-result-msg').textContent =
+    pct >= 80 ? 'Excellent! You really know these words!' :
+    pct >= 50 ? 'Good work! Try again to beat your score.' :
+    'Keep practising — you\'ll get there!';
+}
+
+// ─── UNSCRAMBLE ───
+let unWords = [], unIdx = 0, unScore = 0, unPicked = [], unLetterMap = [];
+
+function startUnscramble() {
+  unWords = shuffle([...currentUnit.words]);
+  unIdx = 0; unScore = 0;
+  document.getElementById('un-unit-name').textContent = currentUnit.title;
+  document.getElementById('un-active').style.display = 'block';
+  document.getElementById('un-result').style.display = 'none';
+  showScreen('unscramble-screen');
+  unShowWord();
+}
+
+function unShowWord() {
+  if (unIdx >= unWords.length) { unShowResult(); return; }
+  const w = unWords[unIdx];
+  unPicked = [];
+  const pct = Math.round(unIdx / unWords.length * 100);
+  document.getElementById('un-prog').style.width = pct + '%';
+  document.getElementById('un-counter').textContent = (unIdx+1) + '/' + unWords.length;
+  document.getElementById('un-emoji').textContent = w.emoji || '📖';
+  document.getElementById('un-context').textContent = w.definition;
+  document.getElementById('un-feedback').textContent = '';
+  document.getElementById('un-feedback').className = 'quiz-feedback';
+
+  const letters = w.word.toUpperCase().split('');
+  unLetterMap = shuffle(letters.map((l, i) => ({ l, origIdx: i })));
+
+  renderUnSlots(w.word);
+  renderUnLetters();
+}
+
+function renderUnSlots(word) {
+  const slots = document.getElementById('un-slots');
+  slots.innerHTML = '';
+  word.split('').forEach((ch, i) => {
+    if (ch === ' ') {
+      const gap = document.createElement('div');
+      gap.className = 'answer-slot gap-slot';
+      gap.dataset.idx = i;
+      gap.dataset.isspace = '1';
+      slots.appendChild(gap);
+    } else {
+      const s = document.createElement('div');
+      s.className = 'answer-slot';
+      s.id = 'slot-' + i;
+      s.dataset.idx = i;
+      s.onclick = () => unRemoveLetter(i);
+      slots.appendChild(s);
+    }
+  });
+}
+
+function renderUnLetters() {
+  const container = document.getElementById('un-letters');
+  container.innerHTML = '';
+  unLetterMap.forEach((item, i) => {
+    if (item.l === ' ') return;
+    const btn = document.createElement('button');
+    btn.className = 'letter-btn';
+    btn.id = 'lbtn-' + i;
+    btn.textContent = item.l;
+    btn.onclick = () => unPickLetter(i);
+    container.appendChild(btn);
+  });
+}
+
+function unPickLetter(mapIdx) {
+  const w = unWords[unIdx];
+  const chars = w.word.split('');
+  const nextSlotIdx = chars.findIndex((ch, i) => ch !== ' ' && !unPicked.find(p => p.slotIdx === i));
+  if (nextSlotIdx === -1) return;
+  unPicked.push({ mapIdx, slotIdx: nextSlotIdx });
+  document.getElementById('slot-' + nextSlotIdx).textContent = unLetterMap[mapIdx].l;
+  document.getElementById('slot-' + nextSlotIdx).classList.add('filled');
+  document.getElementById('lbtn-' + mapIdx).classList.add('used');
+}
+
+function unRemoveLetter(slotIdx) {
+  const pick = unPicked.find(p => p.slotIdx === slotIdx);
+  if (!pick) return;
+  unPicked = unPicked.filter(p => p !== pick);
+  document.getElementById('slot-' + slotIdx).textContent = '';
+  document.getElementById('slot-' + slotIdx).classList.remove('filled', 'correct-slot', 'wrong-slot');
+  document.getElementById('lbtn-' + pick.mapIdx).classList.remove('used');
+}
+
+function unClear() {
+  unPicked = [];
+  const w = unWords[unIdx];
+  w.word.split('').forEach((ch, i) => {
+    if (ch !== ' ') {
+      const s = document.getElementById('slot-' + i);
+      if (s) { s.textContent = ''; s.classList.remove('filled','correct-slot','wrong-slot'); }
+    }
+  });
+  unLetterMap.forEach((item, i) => {
+    const btn = document.getElementById('lbtn-' + i);
+    if (btn) btn.classList.remove('used');
+  });
+}
+
+function unCheck() {
+  const w = unWords[unIdx];
+  const chars = w.word.split('');
+  const allFilled = chars.every((ch, i) => ch === ' ' || unPicked.find(p => p.slotIdx === i));
+  if (!allFilled) { document.getElementById('un-feedback').textContent = 'Fill all the letters first!'; return; }
+
+  let correct = true;
+  chars.forEach((ch, i) => {
+    if (ch === ' ') return;
+    const pick = unPicked.find(p => p.slotIdx === i);
+    const slot = document.getElementById('slot-' + i);
+    if (pick && unLetterMap[pick.mapIdx].l === ch.toUpperCase()) {
+      slot.classList.add('correct-slot');
+    } else {
+      slot.classList.add('wrong-slot');
+      correct = false;
+    }
+  });
+
+  const fb = document.getElementById('un-feedback');
+  if (correct) {
+    unScore += 10;
+    fb.textContent = '✓ Correct! Well done!';
+    fb.className = 'quiz-feedback good';
+    setTimeout(() => { unIdx++; unShowWord(); }, 1200);
+  } else {
+    fb.textContent = '✗ Not quite. The word was: ' + w.word;
+    fb.className = 'quiz-feedback bad';
+    setTimeout(() => { unIdx++; unShowWord(); }, 2000);
+  }
+}
+
+function unShowResult() {
+  document.getElementById('un-active').style.display = 'none';
+  document.getElementById('un-result').style.display = 'block';
+  document.getElementById('un-result-score').textContent = unScore + ' pts';
+  document.getElementById('un-result-msg').textContent =
+    unScore >= unWords.length * 8 ? 'Perfect unscrambling! 🎉' : 'Good try! Play again to improve.';
+}
+
+// ─── FILL IN GAPS ───
+let flWords = [], flIdx = 0, flScore = 0, flAnswered = false;
+
+function startFill() {
+  flWords = shuffle([...currentUnit.words]);
+  flIdx = 0; flScore = 0; flAnswered = false;
+  document.getElementById('fl-unit-name').textContent = currentUnit.title;
+  document.getElementById('fl-active').style.display = 'block';
+  document.getElementById('fl-result').style.display = 'none';
+  showScreen('fill-screen');
+  flShowWord();
+}
+
+function flShowWord() {
+  if (flIdx >= flWords.length) { flShowResult(); return; }
+  const w = flWords[flIdx];
+  flAnswered = false;
+  const pct = Math.round(flIdx / flWords.length * 100);
+  document.getElementById('fl-prog').style.width = pct + '%';
+  document.getElementById('fl-counter').textContent = (flIdx+1) + '/' + flWords.length;
+  document.getElementById('fl-emoji').textContent = w.emoji || '📖';
+  const flCorrectForm = getCorrectForm(w.example, w.word);
+  document.getElementById('fl-hint').textContent = makeHint(flCorrectForm);
+  document.getElementById('fl-pos').textContent = '(' + w.pos + ')';
+  document.getElementById('fl-context').textContent = '"' + makeSentenceTextHint(w.example, w.word) + '"';
+  document.getElementById('fl-input').value = '';
+  document.getElementById('fl-input').className = 'fill-input';
+  document.getElementById('fl-feedback').textContent = '';
+  document.getElementById('fl-feedback').className = 'quiz-feedback';
+  document.getElementById('fl-next').classList.remove('visible');
+  setTimeout(() => document.getElementById('fl-input').focus(), 100);
+}
+
+function fillCheck() {
+  if (flAnswered) return;
+  const w = flWords[flIdx];
+  const val = document.getElementById('fl-input').value.trim();
+  const inp = document.getElementById('fl-input');
+  const fb = document.getElementById('fl-feedback');
+  if (!val) return;
+  flAnswered = true;
+  const correctForm = getCorrectForm(w.example, w.word);
+  const isCorrect = val.toLowerCase() === correctForm.toLowerCase() || val.toLowerCase() === w.word.toLowerCase();
+  if (isCorrect) {
+    inp.className = 'fill-input correct';
+    fb.textContent = '✓ Correct!';
+    fb.className = 'quiz-feedback good';
+    flScore += 10;
+  } else {
+    inp.className = 'fill-input wrong';
+    fb.textContent = '✗ The answer was: ' + correctForm;
+    fb.className = 'quiz-feedback bad';
+  }
+  document.getElementById('fl-next').classList.add('visible');
+}
+
+function fillNext() { flIdx++; flShowWord(); }
+
+function flShowResult() {
+  document.getElementById('fl-active').style.display = 'none';
+  document.getElementById('fl-result').style.display = 'block';
+  document.getElementById('fl-result-score').textContent = flScore + ' pts';
+  const pct = Math.round(flScore / (flWords.length * 10) * 100);
+  document.getElementById('fl-result-msg').textContent =
+    pct >= 80 ? 'Excellent spelling! 🌟' : pct >= 50 ? 'Good effort! Try again to improve.' : 'Keep practising — you\'re getting there! 💪';
+}
+
+// ─── WRITE ───
+let wrWords = [], wrIdx = 0, wrScore = 0, wrAnswered = false;
+
+function startWrite() {
+  wrWords = shuffle([...currentUnit.words]);
+  wrIdx = 0; wrScore = 0; wrAnswered = false;
+  document.getElementById('wr-unit-name').textContent = currentUnit.title;
+  document.getElementById('wr-active').style.display = 'block';
+  document.getElementById('wr-result').style.display = 'none';
+  showScreen('write-screen');
+  wrShowWord();
+}
+
+function wrShowWord() {
+  if (wrIdx >= wrWords.length) { wrShowResult(); return; }
+  const w = wrWords[wrIdx];
+  wrAnswered = false;
+  const pct = Math.round(wrIdx / wrWords.length * 100);
+  document.getElementById('wr-prog').style.width = pct + '%';
+  document.getElementById('wr-counter').textContent = (wrIdx+1) + '/' + wrWords.length;
+  document.getElementById('wr-emoji').textContent = w.emoji || '📖';
+  document.getElementById('wr-def').textContent = w.definition;
+  document.getElementById('wr-example').innerHTML = '"' + makeSentenceWithBlank(w.example, w.word) + '"';
+  document.getElementById('wr-input').value = '';
+  document.getElementById('wr-input').className = 'fill-input';
+  document.getElementById('wr-feedback').textContent = '';
+  document.getElementById('wr-feedback').className = 'quiz-feedback';
+  document.getElementById('wr-next').classList.remove('visible');
+  setTimeout(() => document.getElementById('wr-input').focus(), 100);
+}
+
+function writeCheck() {
+  if (wrAnswered) return;
+  const w = wrWords[wrIdx];
+  const val = document.getElementById('wr-input').value.trim();
+  const inp = document.getElementById('wr-input');
+  const fb = document.getElementById('wr-feedback');
+  if (!val) return;
+  wrAnswered = true;
+  const correctForm = getCorrectForm(w.example, w.word);
+  const isCorrect = val.toLowerCase() === correctForm.toLowerCase() || val.toLowerCase() === w.word.toLowerCase();
+  if (isCorrect) {
+    inp.className = 'fill-input correct';
+    fb.textContent = '✓ Correct! Well done!';
+    fb.className = 'quiz-feedback good';
+    wrScore += 10;
+  } else {
+    inp.className = 'fill-input wrong';
+    fb.textContent = '✗ The answer was: ' + correctForm;
+    fb.className = 'quiz-feedback bad';
+  }
+  document.getElementById('wr-next').classList.add('visible');
+}
+
+function writeNext() { wrIdx++; wrShowWord(); }
+
+function wrShowResult() {
+  document.getElementById('wr-active').style.display = 'none';
+  document.getElementById('wr-result').style.display = 'block';
+  document.getElementById('wr-result-score').textContent = wrScore + ' pts';
+  const pct = Math.round(wrScore / (wrWords.length * 10) * 100);
+  document.getElementById('wr-result-score').style.color = pct >= 80 ? 'var(--green-d)' : pct >= 50 ? 'var(--amber)' : 'var(--red)';
+  document.getElementById('wr-result-msg').textContent =
+    pct >= 80 ? '🏆 You aced the final test! Brilliant!' :
+    pct >= 50 ? '🌟 Good effort! Review and try again.' : '💪 Keep studying — practice makes perfect!';
+}
+
+// ─── EDITOR ───
+function renderEditor() {
+  const container = document.getElementById('editor-units');
+  container.innerHTML = '';
+  units.forEach((u, ui) => {
+    const card = document.createElement('div');
+    card.className = 'editor-unit-card';
+    let html = `
+      <div class="editor-unit-header">
+        <div class="editor-unit-num">${u.title} — ${u.topic}</div>
+        <button class="action-btn btn-sm" style="padding:6px 12px;font-size:12px" onclick="addWord(${ui})">+ Add word</button>
+      </div>
+      <div class="editor-word-list" id="ewl-${ui}">
+    `;
+    u.words.forEach((w, wi) => {
+      html += `
+        <div class="editor-word-row" id="ewr-${ui}-${wi}">
+          <input class="w-word" value="${esc(w.word)}" placeholder="word" title="Word">
+          <input class="w-pos" value="${esc(w.pos)}" placeholder="pos" title="Part of speech">
+          <input class="w-emoji" value="${esc(w.emoji||'')}" placeholder="emoji" title="Emoji">
+          <input class="w-def" value="${esc(w.definition)}" placeholder="definition" title="Definition">
+          <input class="w-ex" value="${esc(w.example)}" placeholder="example sentence" title="Example">
+          <button class="del-btn" onclick="deleteWord(${ui},${wi})">✕</button>
+        </div>
+      `;
+    });
+    html += '</div>';
+    card.innerHTML = html;
+    container.appendChild(card);
+  });
+}
+
+function esc(s) { return (s||'').replace(/"/g, '&quot;'); }
+
+function addWord(ui) {
+  units[ui].words.push({ word: '', pos: 'n', definition: '', example: '', emoji: '📖' });
+  renderEditor();
+}
+
+function deleteWord(ui, wi) {
+  if (!confirm('Delete this word?')) return;
+  units[ui].words.splice(wi, 1);
+  renderEditor();
+}
+
+function saveEditor() {
+  units.forEach((u, ui) => {
+    const list = document.getElementById('ewl-' + ui);
+    if (!list) return;
+    const rows = list.querySelectorAll('.editor-word-row');
+    u.words = [];
+    rows.forEach(row => {
+      const inputs = row.querySelectorAll('input');
+      u.words.push({
+        word: inputs[0].value.trim(),
+        pos: inputs[1].value.trim(),
+        emoji: inputs[2].value.trim(),
+        definition: inputs[3].value.trim(),
+        example: inputs[4].value.trim()
+      });
+    });
+    u.words = u.words.filter(w => w.word);
+  });
+  saveData();
+  alert('Saved! ✓');
+}
+
+function exportData() {
+  saveEditor();
+  const blob = new Blob([JSON.stringify(units, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'academy-stars-5-vocab.json';
+  a.click();
+}
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      units = JSON.parse(ev.target.result);
+      saveData();
+      renderEditor();
+      alert('Imported ' + units.length + ' units!');
+    } catch { alert('Invalid JSON file.'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function resetData() {
+  if (!confirm('Reset all vocabulary to defaults?')) return;
+  units = JSON.parse(JSON.stringify(DEFAULT_UNITS));
+  saveData();
+  renderEditor();
+}
+
+// ─── UTILS ───
+function shuffle(a) {
+  for (let i = a.length-1; i>0; i--) { const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+// ─── INIT ───
+loadData();
+renderHome();
+</script>
+</body>
+</html>
