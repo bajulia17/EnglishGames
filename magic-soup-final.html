@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magic Soup — ESL Sentence Game</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #2ecc8c;
+    --green-dark: #1aab72;
+    --green-light: #d4f5e8;
+    --amber: #f5a623;
+    --amber-light: #fef3dc;
+    --red: #e74c5e;
+    --red-light: #fde8eb;
+    --purple: #7c5cbf;
+    --purple-light: #ede7f6;
+    --bg: #fff9f0;
+    --surface: #ffffff;
+    --surface2: #f5f0e8;
+    --text: #2d2016;
+    --text2: #6e5c48;
+    --text3: #a0927e;
+    --border: #e8dfd0;
+    --pot-dark: #3a2208;
+    --pot-mid: #6b3a10;
+    --pot-accent: #8b4513;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 4px 24px rgba(45,32,22,0.10);
+    --shadow-lg: 0 8px 40px rgba(45,32,22,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background pattern */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(46,204,140,0.07) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(245,166,35,0.07) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; min-height: 100vh; position: relative; z-index: 1; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ── SPLASH ── */
+  #splash {
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    gap: 24px;
+  }
+
+  .splash-pot {
+    font-size: 100px;
+    line-height: 1;
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0 8px 16px rgba(45,32,22,0.18));
+  }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+
+  .splash-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(42px, 10vw, 72px);
+    color: var(--text);
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+  .splash-title span { color: var(--green-dark); }
+
+  .splash-sub {
+    font-size: 18px;
+    color: var(--text2);
+    max-width: 400px;
+    line-height: 1.6;
+  }
+
+  .btn-group { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 320px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: var(--radius);
+    font-family: 'Nunito', sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .btn:active { transform: scale(0.97); }
+
+  .btn-primary { background: var(--green); color: #fff; box-shadow: 0 4px 16px rgba(46,204,140,0.35); }
+  .btn-primary:hover { background: var(--green-dark); }
+  .btn-secondary { background: var(--surface); color: var(--text); border: 2px solid var(--border); }
+  .btn-ghost { background: transparent; color: var(--text2); font-size: 14px; font-weight: 600; }
+  .btn-danger { background: var(--red); color: #fff; }
+  .btn-amber { background: var(--amber); color: #fff; box-shadow: 0 4px 16px rgba(245,166,35,0.30); }
+  .btn-amber:hover { background: #e09618; }
+  .btn-sm { padding: 8px 16px; font-size: 14px; }
+
+  /* ── GAME SCREEN ── */
+  #game {
+    padding: 0;
+    max-width: 700px;
+    margin: 0 auto;
+    width: 100%;
+    padding-bottom: 32px;
+  }
+
+  .game-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .game-logo {
+    font-family: 'Fredoka One', cursive;
+    font-size: 22px;
+    color: var(--green-dark);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .score-pill {
+    background: var(--amber-light);
+    border: 2px solid var(--amber);
+    border-radius: 40px;
+    padding: 5px 14px;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .puzzle-counter {
+    font-size: 13px;
+    color: var(--text3);
+    font-weight: 700;
+    background: var(--surface2);
+    border-radius: 20px;
+    padding: 4px 10px;
+  }
+
+  .game-body { padding: 20px; display: flex; flex-direction: column; gap: 18px; }
+
+  /* Task */
+  .task-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .task-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text3);
+    margin-bottom: 6px;
+  }
+  .task-sentence {
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(15px, 4vw, 19px);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.5;
+    letter-spacing: 0.2px;
+  }
+
+  /* Cauldron */
+  .cauldron-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    position: relative;
+    height: 200px;
+  }
+
+  .cauldron-svg-area {
+    position: relative;
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .steam-row {
+    display: flex;
+    gap: 22px;
+    margin-bottom: 4px;
+    height: 26px;
+  }
+  .steam {
+    font-size: 22px;
+    color: var(--text3);
+    animation: rise 2.2s ease-in-out infinite;
+    opacity: 0.6;
+  }
+  .steam:nth-child(2) { animation-delay: 0.7s; }
+  .steam:nth-child(3) { animation-delay: 1.4s; }
+  @keyframes rise { 0%,100%{transform:translateY(0);opacity:0.6} 50%{transform:translateY(-10px);opacity:0.2} }
+
+  .bubble-row {
+    min-height: 56px;
+    width: 160px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 4px;
+    pointer-events: none;
+  }
+
+  .bubble-word {
+    background: var(--green-light);
+    color: var(--green-dark);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 3px 10px;
+    animation: pop 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes pop { 0%{transform:scale(0);opacity:0} 100%{transform:scale(1);opacity:1} }
+
+  .pot-body {
+    width: 210px;
+    height: 100px;
+    background: var(--pot-dark);
+    border-radius: 0 0 80px 80px;
+    border: 5px solid var(--pot-mid);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+  }
+  .pot-soup {
+    width: 100%;
+    background: #c0673a;
+    transition: height 0.5s cubic-bezier(0.34,1.56,0.64,1), background 0.5s;
+    border-radius: 40% 40% 0 0 / 20% 20% 0 0;
+    position: relative;
+    height: 12px;
+  }
+  .pot-soup::after {
+    content: '';
+    position: absolute;
+    top: -4px; left: 10%; right: 10%;
+    height: 8px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 50%;
+  }
+  .handle { position: absolute; top: 28px; width: 26px; height: 44px; border: 6px solid var(--pot-mid); border-radius: 50%; }
+  .handle-l { left: -22px; border-right: none; }
+  .handle-r { right: -22px; border-left: none; }
+  .pot-legs { display: flex; justify-content: space-around; width: 170px; }
+  .pot-leg { width: 12px; height: 20px; background: var(--pot-mid); border-radius: 0 0 5px 5px; }
+
+  /* Progress */
+  .progress-wrap {
+    background: var(--surface2);
+    border-radius: 20px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--amber));
+    border-radius: 20px;
+    width: 0%;
+    transition: width 0.4s;
+  }
+
+  /* Sentence slots */
+  .slots-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    min-height: 44px;
+    align-items: center;
+  }
+  .slot {
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 800;
+    transition: all 0.25s;
+  }
+  .slot.filled { background: var(--green); color: #fff; box-shadow: 0 3px 10px rgba(46,204,140,0.3); }
+  .slot.empty {
+    background: var(--surface);
+    color: var(--text3);
+    border: 2.5px dashed var(--border);
+    font-weight: 600;
+    font-size: 18px;
+  }
+
+  /* Message */
+  .message-area {
+    text-align: center;
+    min-height: 24px;
+  }
+  .message { font-size: 15px; font-weight: 700; color: var(--text2); transition: all 0.3s; }
+  .message.success { color: var(--green-dark); font-size: 17px; }
+  .message.error { color: var(--red); }
+
+  /* Ingredients */
+  .ing-label {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text3);
+    margin-bottom: 10px;
+  }
+  .ing-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  .ingredient {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    border: 2.5px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+    min-width: 74px;
+    box-shadow: 0 2px 8px rgba(45,32,22,0.06);
+  }
+  .ingredient:hover {
+    transform: translateY(-4px) rotate(-2deg);
+    border-color: var(--green);
+    box-shadow: 0 6px 18px rgba(46,204,140,0.2);
+  }
+  .ingredient:active { transform: scale(0.93); }
+  .ingredient.used { opacity: 0.25; pointer-events: none; }
+  .ingredient.wrong { animation: shake 0.4s; border-color: var(--red); }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .ingredient.correct-pulse { animation: correctpop 0.35s; }
+  @keyframes correctpop { 0%,100%{transform:scale(1)} 50%{transform:scale(1.18)} }
+  .ing-emoji { font-size: 32px; line-height: 1; pointer-events: none; }
+  .ing-word { font-size: 13px; font-weight: 800; color: var(--text); pointer-events: none; }
+
+  /* Controls */
+  .controls-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* ── WIN SCREEN ── */
+  #win {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 24px;
+    gap: 20px;
+  }
+  .win-emoji { font-size: 80px; animation: bounce 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes bounce { 0%{transform:scale(0)} 100%{transform:scale(1)} }
+  .win-title { font-family: 'Fredoka One', cursive; font-size: 48px; color: var(--text); }
+  .win-sub { font-size: 17px; color: var(--text2); max-width: 360px; line-height: 1.6; }
+  .win-score {
+    background: var(--amber-light);
+    border: 3px solid var(--amber);
+    border-radius: var(--radius);
+    padding: 16px 32px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 36px;
+    color: var(--text);
+  }
+
+  /* ── TEACHER EDITOR ── */
+  #editor {
+    padding: 0;
+    max-width: 700px;
+    margin: 0 auto;
+    width: 100%;
+    padding-bottom: 40px;
+  }
+
+  .editor-header {
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .editor-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 22px;
+    color: var(--purple);
+    flex: 1;
+  }
+
+  .editor-body { padding: 24px 20px; display: flex; flex-direction: column; gap: 24px; }
+
+  .editor-section-title {
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text3);
+    margin-bottom: 12px;
+  }
+
+  .puzzle-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: 0 2px 10px rgba(45,32,22,0.06);
+  }
+  .puzzle-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .puzzle-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    color: var(--green-dark);
+    background: var(--green-light);
+    border-radius: 50%;
+    width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .input-group { display: flex; flex-direction: column; gap: 6px; }
+  .input-label { font-size: 13px; font-weight: 700; color: var(--text2); }
+  .input-sub { font-size: 12px; color: var(--text3); margin-top: -3px; }
+  input[type="text"], textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--bg);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  input[type="text"]:focus, textarea:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(46,204,140,0.15);
+  }
+
+  .words-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    min-height: 38px;
+  }
+  .word-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .word-chip.correct-word { background: var(--green-light); border-color: var(--green); color: var(--green-dark); }
+  .word-chip-del {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text3);
+    font-size: 16px;
+    line-height: 1;
+    padding: 0;
+    font-weight: 800;
+    transition: color 0.15s;
+  }
+  .word-chip-del:hover { color: var(--red); }
+
+  .add-word-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .add-word-row input { flex: 1; min-width: 100px; }
+
+  .emoji-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .emoji-btn {
+    font-size: 24px;
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.1s;
+    line-height: 1;
+  }
+  .emoji-btn:hover { border-color: var(--amber); transform: scale(1.15); }
+  .emoji-btn.selected { border-color: var(--green); background: var(--green-light); }
+  .current-emoji-display { font-size: 30px; margin-left: 4px; }
+
+  .add-puzzle-wrap { display: flex; justify-content: center; }
+
+  .editor-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .info-banner {
+    background: var(--purple-light);
+    border: 2px solid #c5b3e8;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-size: 14px;
+    color: #5a3e99;
+    font-weight: 600;
+    line-height: 1.6;
+  }
+  .info-banner strong { font-weight: 800; }
+
+  /* Hint words row */
+  .hint-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .hint-tag {
+    font-size: 12px;
+    background: var(--amber-light);
+    border: 1.5px solid var(--amber);
+    color: #8a5a00;
+    border-radius: 20px;
+    padding: 2px 9px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .hint-tag:hover { background: var(--amber); color: #fff; }
+
+  /* Toast */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--text);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 40px;
+    font-size: 15px;
+    font-weight: 700;
+    z-index: 999;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    white-space: nowrap;
+    box-shadow: var(--shadow-lg);
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .pot-body { width: 170px; height: 80px; }
+    .cauldron-wrap { height: 170px; }
+    .bubble-row { width: 130px; }
+    .cauldron-svg-area { width: 180px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── SPLASH ── -->
+<div id="splash" class="screen active">
+  <div class="splash-pot">🍲</div>
+  <h1 class="splash-title">Magic<br><span>Soup!</span></h1>
+  <p class="splash-sub">Throw ingredient words into the pot to build sentences. A fun ESL game for kids!</p>
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="startGame()">▶ Play Now</button>
+    <button class="btn btn-amber" onclick="showEditor()">✏️ Teacher Editor</button>
+  </div>
+  <p style="font-size:12px;color:var(--text3);margin-top:8px;">Works offline · No login needed · Free forever</p>
+</div>
+
+<!-- ── GAME ── -->
+<div id="game" class="screen">
+  <div class="game-header">
+    <div class="game-logo">🍲 Magic Soup</div>
+    <div class="puzzle-counter" id="puzzle-counter">1 / 5</div>
+    <div class="score-pill">⭐ <span id="score-val">0</span></div>
+  </div>
+  <div class="game-body">
+    <div class="task-card">
+      <div class="task-label">🧑‍🍳 What's happening?</div>
+      <div class="task-sentence" id="task-sentence"></div>
+    </div>
+
+    <div class="cauldron-wrap">
+      <div class="cauldron-svg-area">
+        <div class="steam-row">
+          <span class="steam">〜</span>
+          <span class="steam">〜</span>
+          <span class="steam">〜</span>
+        </div>
+        <div class="bubble-row" id="bubble-zone"></div>
+        <div class="pot-body" id="pot-body">
+          <div class="handle handle-l"></div>
+          <div class="handle handle-r"></div>
+          <div class="pot-soup" id="pot-soup"></div>
+        </div>
+        <div class="pot-legs">
+          <div class="pot-leg"></div>
+          <div class="pot-leg"></div>
+          <div class="pot-leg"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slots-row" id="slots-row"></div>
+    <div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+    <div class="message-area"><div class="message" id="message">Pick the first word! 🍴</div></div>
+
+    <div>
+      <div class="ing-label">🥕 Ingredients — click to throw into the pot!</div>
+      <div class="ing-grid" id="ing-grid"></div>
+    </div>
+
+    <div class="controls-row">
+      <button class="btn btn-secondary btn-sm" onclick="resetRound()">🔄 Try again</button>
+      <button class="btn btn-ghost btn-sm" onclick="showScreen('splash')">🏠 Home</button>
+      <button class="btn btn-primary btn-sm" onclick="nextPuzzle()">Next ➜</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── WIN ── -->
+<div id="win" class="screen">
+  <div class="win-emoji" id="win-emoji">🏆</div>
+  <h1 class="win-title">Amazing Chef!</h1>
+  <p class="win-sub" id="win-sub">You cooked all the sentences!</p>
+  <div class="win-score" id="win-score">⭐ 50 pts</div>
+  <div class="btn-group" style="max-width:280px">
+    <button class="btn btn-primary" onclick="startGame()">▶ Play again</button>
+    <button class="btn btn-secondary" onclick="showScreen('splash')">🏠 Home</button>
+  </div>
+</div>
+
+<!-- ── TEACHER EDITOR ── -->
+<div id="editor" class="screen">
+  <div class="editor-header">
+    <button class="btn btn-ghost btn-sm" onclick="showScreen('splash')" style="padding:6px 10px;">← Back</button>
+    <div class="editor-title">✏️ Teacher Editor</div>
+  </div>
+  <div class="editor-body">
+
+    <div class="info-banner">
+      <strong>How to use:</strong> Add your own sentences below. Each sentence needs a few <em>extra distractor words</em> (wrong answers) to make it a challenge. Pick a fun emoji for each word. When done, click <strong>Save &amp; Play</strong>!
+    </div>
+
+    <div>
+      <div class="editor-section-title">Puzzles</div>
+      <div id="puzzles-list" style="display:flex;flex-direction:column;gap:16px;"></div>
+    </div>
+
+    <div class="add-puzzle-wrap">
+      <button class="btn btn-secondary" onclick="addPuzzle()">＋ Add new puzzle</button>
+    </div>
+
+    <div class="editor-actions">
+      <button class="btn btn-primary" style="width:100%;" onclick="saveAndPlay()">▶ Save &amp; Play!</button>
+      <button class="btn btn-amber" style="width:100%;" onclick="exportJSON()">💾 Export puzzles (JSON)</button>
+      <div style="position:relative;">
+        <button class="btn btn-secondary" style="width:100%;" onclick="document.getElementById('import-file').click()">📂 Import puzzles (JSON)</button>
+        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)">
+      </div>
+      <button class="btn btn-ghost" style="width:100%;color:var(--red);" onclick="resetToDefaults()">↩ Reset to default puzzles</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+// ──────────────────────────────────────────
+//  DEFAULT PUZZLES
+// ──────────────────────────────────────────
+const DEFAULT_PUZZLES = [
+  {
+    "hint": "🌅 Stella opens her eyes. It's 7 o'clock!",
+    "sentence": ["Stella","wakes","up","at","seven","o'clock"],
+    "extras": ["goes","bed","nine","she","gets"],
+    "emojis": {"Stella":"👧","wakes":"😴","up":"⬆️","at":"🕖","seven":"7️⃣","o'clock":"🕒","goes":"🚶","bed":"🛏️","nine":"9️⃣","she":"👱‍♀️","gets":"✋"}
+  },
+  {
+    "hint": "🛏️ She jumps out of bed!",
+    "sentence": ["She","gets","up"],
+    "extras": ["goes","wakes","down","at","he"],
+    "emojis": {"Then":"➡️","she":"👧","gets":"⬆️","up":"⬆️","goes":"🚶","wakes":"😴","down":"⬇️","at":"🕖","he":"👦"}
+  },
+  {
+    "hint": "🚿 Before breakfast, Stella is in the bathroom.",
+    "sentence": ["She","has","a","shower"],
+    "extras": ["takes","bath","the","he","they"],
+    "emojis": {"She":"👧","has":"🚿","a":"1️⃣","shower":"🚿","takes":"✋","bath":"🛁","the":"📖","he":"👦","they":"👥"}
+  },
+  {
+    "hint": "👕 Stella puts on her clothes in the morning.",
+    "sentence": ["She","gets","dressed"],
+    "extras": ["undressed","puts","takes","he","off"],
+    "emojis": {"She":"👧","gets":"✨","dressed":"👗","undressed":"🙈","puts":"✋","takes":"👕","he":"👦","off":"❌"}
+  },
+  {
+    "hint": "👕 At night Stella takes her clothes off.",
+    "sentence": ["She","gets","undressed"],
+    "extras": ["dressed","puts","takes","he","on"],
+    "emojis": {"She":"👧","gets":"😴","undressed":"🛏️","dressed":"👗","puts":"✋","takes":"👕","he":"👦","on":"✅"}
+  },
+  {
+    "hint": "👕 Stella gets dressed.",
+    "sentence": ["She","puts","on","her","T-shirt"],
+    "extras": ["takes","off","he","dress","gets"],
+    "emojis": {"She":"👧","puts":"✋","on":"✅","her":"👧","T-shirt":"👕","takes":"✂️","off":"❌","he":"👦","dress":"👗","gets":"✨"}
+  },
+  {
+    "hint": "👚 Stella gets undressed before bed.",
+    "sentence": ["She","takes","off","her","skirt"],
+    "extras": ["puts","on","he","T-shirt","gets"],
+    "emojis": {"She":"👧","takes":"✂️","off":"❌","her":"👧","skirt":"👗","puts":"✋","on":"✅","he":"👦","T-shirt":"👕","gets":"✨"}
+  },
+  {
+    "hint": "🚌 Stella runs to the bus stop!",
+    "sentence": ["She","catches","the","bus"],
+    "extras": ["he","misses","car","a","rides"],
+    "emojis": {"She":"👧","catches":"🏃","the":"🚌","bus":"🚌","he":"👦","misses":"😱","car":"🚗","a":"1️⃣","rides":"🚴"}
+  },
+  {
+    "hint": "📚 After school, Stella sits at her desk with books.",
+    "sentence": ["She","does","her","homework"],
+    "extras": ["reads","book","he","they","forgets"],
+    "emojis": {"She":"👧","does":"✏️","her":"📚","homework":"📝","reads":"📖","book":"📗","he":"👦","they":"👥","forgets":"🤷"}
+  },
+  {
+    "hint": "🧼 Stella goes to the bathroom before dinner.",
+    "sentence": ["She","washes","her","hands"],
+    "extras": ["face","he","they","cleans","hair"],
+    "emojis": {"She":"👧","washes":"🧼","her":"🤲","hands":"🤲","face":"😊","he":"👦","they":"👥","cleans":"🧹","hair":"💇"}
+  },
+  {
+    "hint": "😴 Stella is very tired. Time to sleep!",
+    "sentence": ["She","goes","to","bed","at","nine"],
+    "extras": ["wakes","up","seven","o'clock","she","ten"],
+    "emojis": {"She":"👧","goes":"🚶","to":"➡️","bed":"🛏️","at":"🕘","nine":"9️⃣","wakes":"😴","up":"⬆️","seven":"7️⃣","o'clock":"🕒","ten":"🔟"}
+  }
+];
+
+const EMOJI_PALETTE = ["🐱","🐶","🐦","🐟","🍎","🍌","🍲","🥤","❤️","⭐","🌟","🔴","🔵","🟡","🟢","📖","✨","💪","🏊","⚡","🏃","🐢","👤","👧","👦","👫","👨‍👩‍👧","👥","🍽️","😋","🌶️","❄️","⬆️","⬇️","📄","📝","🌬️","🌊","🧠","🎯","🎉","🌈","🏆","💡","🎵","🌺","🍓","🥕","🥦","🍕","🎈","🚀","🌙","☀️","🌸","🍀","🦋","🐸","🐰","🦊","🐻","🌻"];
+
+let puzzles = [];
+let gameIndex = 0;
+let playerSentence = [];
+let score = 0;
+
+// ──────────────────────────────────────────
+//  STORAGE
+// ──────────────────────────────────────────
+const PUZZLES_VERSION = 'unit3_v2';
+
+function loadPuzzles() {
+  try {
+    const version = localStorage.getItem('magicsoup_version');
+    if (version === PUZZLES_VERSION) {
+      const stored = localStorage.getItem('magicsoup_puzzles');
+      if (stored) { puzzles = JSON.parse(stored); return; }
+    } else {
+      localStorage.removeItem('magicsoup_puzzles');
+      localStorage.setItem('magicsoup_version', PUZZLES_VERSION);
+    }
+  } catch(e) {}
+  puzzles = JSON.parse(JSON.stringify(DEFAULT_PUZZLES));
+}
+
+function savePuzzles() {
+  try { localStorage.setItem('magicsoup_puzzles', JSON.stringify(puzzles)); } catch(e) {}
+}
+
+// ──────────────────────────────────────────
+//  SCREENS
+// ──────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ──────────────────────────────────────────
+//  GAME
+// ──────────────────────────────────────────
+function startGame() {
+  loadPuzzles();
+  if (!puzzles.length) { toast('No puzzles found! Add some in the editor.'); return; }
+  gameIndex = 0;
+  score = 0;
+  updateScore();
+  showScreen('game');
+  loadPuzzle();
+}
+
+function loadPuzzle() {
+  playerSentence = [];
+  const p = puzzles[gameIndex];
+  document.getElementById('puzzle-counter').textContent = (gameIndex+1) + ' / ' + puzzles.length;
+  document.getElementById('task-sentence').textContent = p.hint || '🍴 Build the sentence!';
+  document.getElementById('bubble-zone').innerHTML = '';
+  document.getElementById('progress-bar').style.width = '0%';
+  setSoupLevel(0);
+  renderSlots();
+  renderIngredients();
+  setMsg('Pick the first word! 🍴', '');
+}
+
+function renderSlots() {
+  const row = document.getElementById('slots-row');
+  row.innerHTML = '';
+  const p = puzzles[gameIndex];
+  p.sentence.forEach((w, i) => {
+    const d = document.createElement('div');
+    d.className = 'slot ' + (i < playerSentence.length ? 'filled' : 'empty');
+    d.id = 'slot-' + i;
+    d.textContent = i < playerSentence.length ? playerSentence[i] : '?';
+    row.appendChild(d);
+  });
+}
+
+function renderIngredients() {
+  const grid = document.getElementById('ing-grid');
+  grid.innerHTML = '';
+  const p = puzzles[gameIndex];
+  const allWords = shuffle([...p.sentence, ...(p.extras || [])]);
+  allWords.forEach(word => {
+    const el = document.createElement('div');
+    el.className = 'ingredient';
+    el.id = 'ing-' + CSS.escape(word);
+    const emoji = (p.emojis && p.emojis[word]) || '🥦';
+    el.innerHTML = `<span class="ing-emoji">${emoji}</span><span class="ing-word">${word}</span>`;
+    el.addEventListener('click', () => throwWord(word, el));
+    grid.appendChild(el);
+  });
+}
+
+function throwWord(word, el) {
+  const p = puzzles[gameIndex];
+  const expected = p.sentence[playerSentence.length];
+  if (word === expected) {
+    el.classList.add('correct-pulse');
+    setTimeout(() => el.classList.add('used'), 300);
+    playerSentence.push(word);
+    addBubble(word);
+    renderSlots();
+    const pct = (playerSentence.length / p.sentence.length) * 100;
+    document.getElementById('progress-bar').style.width = pct + '%';
+    setSoupLevel(playerSentence.length, p.sentence.length);
+
+    if (playerSentence.length === p.sentence.length) {
+      score += 10;
+      updateScore();
+      setMsg('🎉 Perfect sentence! Amazing chef!', 'success');
+      setTimeout(() => {
+        gameIndex++;
+        if (gameIndex >= puzzles.length) showWin();
+        else loadPuzzle();
+      }, 1900);
+    } else {
+      setMsg('Yes! Now find: "' + p.sentence[playerSentence.length] + '"', '');
+    }
+  } else {
+    el.classList.add('wrong');
+    setTimeout(() => el.classList.remove('wrong'), 400);
+    setMsg('Oops! That word comes later 🙈', 'error');
+    setTimeout(() => {
+      if (playerSentence.length === 0) setMsg('Pick the first word! 🍴', '');
+      else setMsg('Now find: "' + p.sentence[playerSentence.length] + '"', '');
+    }, 1000);
+  }
+}
+
+function addBubble(word) {
+  const bz = document.getElementById('bubble-zone');
+  const c = document.createElement('div');
+  c.className = 'bubble-word';
+  c.textContent = word;
+  bz.appendChild(c);
+}
+
+function setSoupLevel(count, total) {
+  if (total === undefined) { total = puzzles[gameIndex] ? puzzles[gameIndex].sentence.length : 4; }
+  const pct = count / Math.max(total, 1);
+  const h = Math.round(12 + pct * 72);
+  const soup = document.getElementById('pot-soup');
+  soup.style.height = h + 'px';
+  const colors = ['#c0673a','#c07a3a','#c09a3a','#a0c03a','#3ab880','#2ecc8c'];
+  const idx = Math.min(Math.floor(pct * (colors.length - 0.01)), colors.length - 1);
+  soup.style.background = colors[idx];
+}
+
+function resetRound() { loadPuzzle(); }
+
+function nextPuzzle() {
+  gameIndex = (gameIndex + 1) % puzzles.length;
+  loadPuzzle();
+}
+
+function updateScore() {
+  document.getElementById('score-val').textContent = score;
+}
+
+function setMsg(text, type) {
+  const m = document.getElementById('message');
+  m.textContent = text;
+  m.className = 'message ' + (type || '');
+}
+
+function showWin() {
+  document.getElementById('win-sub').textContent =
+    'You cooked all ' + puzzles.length + ' sentences!';
+  document.getElementById('win-score').textContent = '⭐ ' + score + ' points!';
+  showScreen('win');
+}
+
+// ──────────────────────────────────────────
+//  TEACHER EDITOR
+// ──────────────────────────────────────────
+function showEditor() {
+  loadPuzzles();
+  renderEditor();
+  showScreen('editor');
+}
+
+function renderEditor() {
+  const list = document.getElementById('puzzles-list');
+  list.innerHTML = '';
+  puzzles.forEach((p, i) => list.appendChild(buildPuzzleCard(p, i)));
+}
+
+function buildPuzzleCard(p, idx) {
+  const card = document.createElement('div');
+  card.className = 'puzzle-card';
+  card.id = 'puzzle-card-' + idx;
+
+  // Header
+  const hdr = document.createElement('div');
+  hdr.className = 'puzzle-card-header';
+  hdr.innerHTML = `
+    <div class="puzzle-num">${idx + 1}</div>
+    <button class="btn btn-danger btn-sm" onclick="removePuzzle(${idx})">🗑 Delete</button>
+  `;
+  card.appendChild(hdr);
+
+  // Hint input
+  const hintGroup = document.createElement('div');
+  hintGroup.className = 'input-group';
+  hintGroup.innerHTML = `
+    <div class="input-label">🖼️ Picture clue (shown instead of the answer)</div>
+    <div class="input-sub">Describe what's happening — this replaces the sentence on screen</div>
+    <input type="text" id="hint-${idx}" value="${(p.hint||'').replace(/"/g,'&quot;')}" placeholder="e.g. 🌅 Stella opens her eyes. It's 7 o'clock!">
+  `;
+  card.appendChild(hintGroup);
+
+  // Sentence input
+  const sentGroup = document.createElement('div');
+  sentGroup.className = 'input-group';
+  sentGroup.innerHTML = `
+    <div class="input-label">Correct sentence <span style="color:var(--green-dark)">✓</span></div>
+    <div class="input-sub">Type the sentence, separate words with spaces</div>
+    <input type="text" id="sent-${idx}" value="${p.sentence.join(' ')}" placeholder="e.g.  The cat is big" oninput="updateSentence(${idx})">
+  `;
+  card.appendChild(sentGroup);
+
+  // Extra distractors
+  const extGroup = document.createElement('div');
+  extGroup.className = 'input-group';
+  extGroup.innerHTML = `
+    <div class="input-label">Distractor words (wrong answers)</div>
+    <div class="input-sub">These mix with the correct words to make it tricky</div>
+  `;
+  const wordsGrid = document.createElement('div');
+  wordsGrid.className = 'words-grid';
+  wordsGrid.id = 'words-grid-' + idx;
+  (p.extras || []).forEach(w => wordsGrid.appendChild(makeWordChip(w, idx)));
+  extGroup.appendChild(wordsGrid);
+
+  const addRow = document.createElement('div');
+  addRow.className = 'add-word-row';
+  addRow.innerHTML = `
+    <input type="text" id="new-word-${idx}" placeholder="Type a word..." onkeydown="if(event.key==='Enter')addDistractor(${idx})">
+    <button class="btn btn-secondary btn-sm" onclick="addDistractor(${idx})">＋ Add</button>
+  `;
+  extGroup.appendChild(addRow);
+  card.appendChild(extGroup);
+
+  // Emoji picker per word
+  const emojiGroup = document.createElement('div');
+  emojiGroup.className = 'input-group';
+  emojiGroup.innerHTML = `<div class="input-label">Word emojis</div><div class="input-sub">Click a word to pick its emoji</div>`;
+  const emojiArea = document.createElement('div');
+  emojiArea.id = 'emoji-area-' + idx;
+  buildEmojiArea(emojiArea, p, idx);
+  emojiGroup.appendChild(emojiArea);
+  card.appendChild(emojiGroup);
+
+  return card;
+}
+
+function buildEmojiArea(area, p, idx) {
+  area.innerHTML = '';
+  const allWords = [...p.sentence, ...(p.extras || [])];
+
+  // Word selector row
+  const wordRow = document.createElement('div');
+  wordRow.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;';
+  allWords.forEach(w => {
+    const btn = document.createElement('button');
+    btn.className = 'hint-tag';
+    btn.innerHTML = `${(p.emojis && p.emojis[w]) || '❓'} ${w}`;
+    btn.onclick = () => openEmojiPicker(idx, w);
+    btn.id = `word-emoji-btn-${idx}-${w}`;
+    wordRow.appendChild(btn);
+  });
+  area.appendChild(wordRow);
+
+  // Inline emoji picker (hidden by default)
+  const picker = document.createElement('div');
+  picker.id = 'picker-' + idx;
+  picker.style.display = 'none';
+  picker.style.cssText = 'background:var(--surface2);border:2px solid var(--border);border-radius:var(--radius-sm);padding:12px;';
+  picker.innerHTML = `
+    <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:8px;" id="picker-title-${idx}">Pick emoji for word</div>
+    <div class="emoji-grid" id="emoji-grid-${idx}"></div>
+  `;
+  area.appendChild(picker);
+}
+
+function openEmojiPicker(idx, word) {
+  const picker = document.getElementById('picker-' + idx);
+  const title = document.getElementById('picker-title-' + idx);
+  const grid = document.getElementById('emoji-grid-' + idx);
+  title.textContent = `Emoji for: "${word}"`;
+  grid.innerHTML = '';
+  EMOJI_PALETTE.forEach(em => {
+    const b = document.createElement('button');
+    b.className = 'emoji-btn' + ((puzzles[idx].emojis && puzzles[idx].emojis[word] === em) ? ' selected' : '');
+    b.textContent = em;
+    b.onclick = () => { setWordEmoji(idx, word, em); picker.style.display = 'none'; };
+    grid.appendChild(b);
+  });
+  picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+}
+
+function setWordEmoji(idx, word, emoji) {
+  if (!puzzles[idx].emojis) puzzles[idx].emojis = {};
+  puzzles[idx].emojis[word] = emoji;
+  const btn = document.getElementById(`word-emoji-btn-${idx}-${word}`);
+  if (btn) btn.innerHTML = `${emoji} ${word}`;
+}
+
+function makeWordChip(word, idx) {
+  const chip = document.createElement('div');
+  chip.className = 'word-chip';
+  chip.innerHTML = `${word}<button class="word-chip-del" onclick="removeDistractor(${idx},'${word.replace(/'/g,"\\'")}')">×</button>`;
+  return chip;
+}
+
+function updateSentence(idx) {
+  const val = document.getElementById('sent-' + idx).value.trim();
+  const words = val.split(/\s+/).filter(Boolean);
+  puzzles[idx].sentence = words;
+  // refresh emoji area
+  const area = document.getElementById('emoji-area-' + idx);
+  if (area) buildEmojiArea(area, puzzles[idx], idx);
+}
+
+function addDistractor(idx) {
+  const inp = document.getElementById('new-word-' + idx);
+  const word = inp.value.trim();
+  if (!word) return;
+  if (!puzzles[idx].extras) puzzles[idx].extras = [];
+  if (puzzles[idx].extras.includes(word)) { toast('Word already added!'); return; }
+  puzzles[idx].extras.push(word);
+  inp.value = '';
+  const grid = document.getElementById('words-grid-' + idx);
+  grid.appendChild(makeWordChip(word, idx));
+  const area = document.getElementById('emoji-area-' + idx);
+  if (area) buildEmojiArea(area, puzzles[idx], idx);
+}
+
+function removeDistractor(idx, word) {
+  puzzles[idx].extras = (puzzles[idx].extras || []).filter(w => w !== word);
+  const grid = document.getElementById('words-grid-' + idx);
+  grid.innerHTML = '';
+  (puzzles[idx].extras || []).forEach(w => grid.appendChild(makeWordChip(w, idx)));
+  const area = document.getElementById('emoji-area-' + idx);
+  if (area) buildEmojiArea(area, puzzles[idx], idx);
+}
+
+function removePuzzle(idx) {
+  if (puzzles.length <= 1) { toast('You need at least one puzzle!'); return; }
+  if (!confirm('Delete puzzle ' + (idx + 1) + '?')) return;
+  puzzles.splice(idx, 1);
+  renderEditor();
+}
+
+function addPuzzle() {
+  puzzles.push({
+    hint: "🖼️ Describe what's happening here...",
+    sentence: ["New","sentence","here"],
+    extras: ["wrong","word"],
+    emojis: {"New":"✨","sentence":"📝","here":"📍","wrong":"❌","word":"💬"}
+  });
+  renderEditor();
+  setTimeout(() => {
+    const cards = document.querySelectorAll('.puzzle-card');
+    cards[cards.length - 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+function syncFromEditor() {
+  puzzles.forEach((p, i) => {
+    const sentInput = document.getElementById('sent-' + i);
+    if (sentInput) {
+      p.sentence = sentInput.value.trim().split(/\s+/).filter(Boolean);
+    }
+    const hintInput = document.getElementById('hint-' + i);
+    if (hintInput) {
+      p.hint = hintInput.value.trim();
+    }
+  });
+}
+
+function saveAndPlay() {
+  syncFromEditor();
+  const valid = puzzles.filter(p => p.sentence.length >= 2);
+  if (!valid.length) { toast('Add at least one sentence with 2+ words!'); return; }
+  puzzles = valid;
+  savePuzzles();
+  toast('Saved! Starting game...');
+  setTimeout(() => startGame(), 900);
+}
+
+function exportJSON() {
+  syncFromEditor();
+  savePuzzles();
+  const blob = new Blob([JSON.stringify(puzzles, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'magic-soup-puzzles.json';
+  a.click();
+  toast('Exported!');
+}
+
+function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!Array.isArray(data)) throw new Error('Invalid format');
+      puzzles = data;
+      savePuzzles();
+      renderEditor();
+      toast('Imported ' + data.length + ' puzzles!');
+    } catch(err) {
+      toast('Error: invalid JSON file');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function resetToDefaults() {
+  if (!confirm('Reset all puzzles to the original 5 defaults?')) return;
+  puzzles = JSON.parse(JSON.stringify(DEFAULT_PUZZLES));
+  savePuzzles();
+  renderEditor();
+  toast('Reset to defaults!');
+}
+
+// ──────────────────────────────────────────
+//  UTILS
+// ──────────────────────────────────────────
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// ──────────────────────────────────────────
+//  INIT
+// ──────────────────────────────────────────
+loadPuzzles();
+</script>
+</body>
+</html>
