@@ -697,8 +697,17 @@ const COLORS=['#e03030','#1a6fd4','#1fa060','#7c3aed','#e06a00','#be185d','#0891
 // ═══════════════════════════════════════════
 //  HELPERS
 // ═══════════════════════════════════════════
+const IRREGULARS={'rose':'rise','shook':'shake','froze':'freeze','forgave':'forgive','went':'go','came':'come','got':'get','saw':'see','took':'take','gave':'give','made':'make','said':'say','told':'tell','found':'find','felt':'feel','kept':'keep','left':'leave','swam':'swim','ran':'run','sang':'sing','sat':'sit','slept':'sleep','stood':'stand','thought':'think','wore':'wear','won':'win','wrote':'write','bought':'buy','brought':'bring','built':'build','caught':'catch','chose':'choose','drew':'draw','drove':'drive','fell':'fall','flew':'fly','heard':'hear','held':'hold','knew':'know','led':'lead','lost':'lose','paid':'pay','rode':'ride','sent':'send','sold':'sell','spent':'spend','spoke':'speak','taught':'teach','threw':'throw'};
+const BASES=new Set(Object.values(IRREGULARS));
 function makeHint(w){return w.split(' ').map(p=>p.length<=1?p:p[0]+'_'.repeat(p.length-1)).join(' ');}
-function stemOf(w){w=w.toLowerCase();for(const[s,r]of[['ied','y'],['ies','y'],['ving','v'],['sing','s'],['zing','z'],['cing','c'],['pping','p'],['tting','t'],['nning','n'],['rring','r'],['lling','l'],['gging','g'],['mming','m'],['ssing','ss'],['sed','s'],['ing',''],['ed',''],['es',''],['s',''],['d',''],['e','']]){if(w.endsWith(s)&&w.length-s.length>=3)return w.slice(0,w.length-s.length)+r;}return w;}
+function stemOf(w){
+  const wl=w.toLowerCase();
+  if(IRREGULARS[wl])return IRREGULARS[wl];
+  if(BASES.has(wl))return wl;
+  for(const[sfx,rep]of[['pped','p'],['gged','g'],['tted','t'],['nned','n'],['rred','r'],['lled','l'],['mmed','m'],['pping','p'],['gging','g'],['tting','t'],['nning','n'],['rring','r'],['lling','l'],['mming','m']]){if(wl.endsWith(sfx)&&wl.length-sfx.length>=2)return wl.slice(0,wl.length-sfx.length)+rep;}
+  for(const[sfx,rep]of[['ied','y'],['ies','y'],['ving','v'],['sing','s'],['zing','z'],['cing','c'],['ssing','ss'],['sed','s'],['zed','z'],['ced','c'],['ing',''],['ed',''],['es',''],['s',''],['d',''],['e','']]){if(wl.endsWith(sfx)&&wl.length-sfx.length>=3)return wl.slice(0,wl.length-sfx.length)+rep;}
+  return wl;
+}
 function sm(a,b){const sa=stemOf(a),sb=stemOf(b);if(sa===sb)return true;const ml=Math.min(sa.length,sb.length);return ml>=4&&(sa.startsWith(sb.slice(0,ml))||sb.startsWith(sa.slice(0,ml)));}
 function findIn(ex,word){const tw=word.trim().split(/\s+/),n=tw.length,toks=[];const re=/(\w[\w'-]*|\W+)/g;let m;while((m=re.exec(ex))!==null)toks.push({text:m[0],start:m.index,end:m.index+m[0].length,isW:/\w/.test(m[0])});const wt=toks.filter(t=>t.isW);for(let i=0;i<=wt.length-n;i++){let ok=true;for(let j=0;j<n;j++){const t=tw[j].toLowerCase(),s=wt[i+j].text.toLowerCase();if(j===0){if(!sm(t,s)){ok=false;break;}}else{if(s!==t){ok=false;break;}}}if(ok)return{start:wt[i].start,end:wt[i+n-1].end,matched:ex.slice(wt[i].start,wt[i+n-1].end)};}return null;}
 function hintHTML(ex,w){const f=findIn(ex,w);if(!f)return ex+` <span class="card-blank">${makeHint(w)}</span>`;return ex.slice(0,f.start)+`<span class="card-blank">${makeHint(f.matched)}</span>`+ex.slice(f.end);}
