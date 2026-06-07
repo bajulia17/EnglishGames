@@ -865,6 +865,8 @@ const UNITS = [
 // ═══════════════════════════════════════════
 //  HELPERS
 // ═══════════════════════════════════════════
+const IRREGULARS={'rose':'rise','shook':'shake','froze':'freeze','forgave':'forgive','went':'go','came':'come','got':'get','saw':'see','took':'take','gave':'give','made':'make','said':'say','told':'tell','found':'find','felt':'feel','kept':'keep','left':'leave','swam':'swim','ran':'run','sang':'sing','sat':'sit','slept':'sleep','stood':'stand','thought':'think','wore':'wear','won':'win','wrote':'write','bought':'buy','brought':'bring','built':'build','caught':'catch','chose':'choose','drew':'draw','drove':'drive','fell':'fall','flew':'fly','heard':'hear','held':'hold','knew':'know','led':'lead','lost':'lose','paid':'pay','rode':'ride','sent':'send','sold':'sell','spent':'spend','spoke':'speak','taught':'teach','threw':'throw'};
+const BASES=new Set(Object.values(IRREGULARS));
 function makeHint(word){
   return word.split(' ').map(w=>{
     if(w.length<=1)return w;
@@ -873,11 +875,12 @@ function makeHint(word){
 }
 function escReg(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
 function stemOf(w){
-  w=w.toLowerCase();
-  for(const[sfx,rep]of[['ied','y'],['ies','y'],['ving','v'],['sing','s'],['zing','z'],['cing','c'],['pping','p'],['tting','t'],['nning','n'],['rring','r'],['lling','l'],['gging','g'],['mming','m'],['ssing','ss'],['sed','s'],['zed','z'],['ced','c'],['ing',''],['ed',''],['es',''],['s',''],['d',''],['e','']]) {
-    if(w.endsWith(sfx)&&w.length-sfx.length>=3) return w.slice(0,w.length-sfx.length)+rep;
-  }
-  return w;
+  const wl=w.toLowerCase();
+  if(IRREGULARS[wl])return IRREGULARS[wl];
+  if(BASES.has(wl))return wl;
+  for(const[sfx,rep]of[['pped','p'],['gged','g'],['tted','t'],['nned','n'],['rred','r'],['lled','l'],['mmed','m'],['pping','p'],['gging','g'],['tting','t'],['nning','n'],['rring','r'],['lling','l'],['mming','m']]){if(wl.endsWith(sfx)&&wl.length-sfx.length>=2)return wl.slice(0,wl.length-sfx.length)+rep;}
+  for(const[sfx,rep]of[['ied','y'],['ies','y'],['ving','v'],['sing','s'],['zing','z'],['cing','c'],['ssing','ss'],['sed','s'],['zed','z'],['ced','c'],['ing',''],['ed',''],['es',''],['s',''],['d',''],['e','']]){if(wl.endsWith(sfx)&&wl.length-sfx.length>=3)return wl.slice(0,wl.length-sfx.length)+rep;}
+  return wl;
 }
 function stemsMatch(a,b){
   const sa=stemOf(a),sb=stemOf(b);
