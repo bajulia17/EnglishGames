@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prepare! Level 5 — Vocabulary</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #12120f;
+  --ink2: #47473a;
+  --ink3: #8a8a78;
+  --bg: #fffef5;
+  --surface: #ffffff;
+  --surface2: #f5f4e8;
+  --border: #e5e4d0;
+  --yellow: #f5e200;
+  --yellow-d: #c8b800;
+  --green: #1fa060;
+  --green-l: #d4f5e4;
+  --red: #e03030;
+  --red-l: #fde8e8;
+  --blue: #1a6fd4;
+  --blue-l: #dbeafe;
+  --purple: #7c3aed;
+  --purple-l: #ede9fe;
+  --orange: #e06a00;
+  --orange-l: #feecd4;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 2px 14px rgba(18,18,15,0.09);
+  --shadow-lg: 0 8px 36px rgba(18,18,15,0.15);
+  --unit-color: #1a6fd4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+
+/* ── HEADER ── */
+.app-bar{background:var(--yellow);border-bottom:3px solid var(--ink);padding:10px 20px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;}
+.app-logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--ink);flex:1;letter-spacing:-.5px;text-transform:uppercase;}
+.app-logo span{color:var(--orange);}
+.hdr-btn{padding:6px 14px;border-radius:var(--radius-sm);font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:2px solid var(--ink);background:var(--surface);color:var(--ink);transition:all .15s;}
+.hdr-btn:hover{background:var(--ink);color:#fff;}
+
+/* ── SCREENS ── */
+.screen{display:none;}
+.screen.active{display:block;}
+
+/* ── HOME ── */
+#home{max-width:820px;margin:0 auto;padding:28px 20px;}
+.home-kicker{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--ink3);margin-bottom:6px;}
+.home-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,7vw,64px);font-weight:900;line-height:.95;text-transform:uppercase;margin-bottom:10px;}
+.home-title span{-webkit-text-stroke:2px var(--ink);color:transparent;}
+.home-sub{font-size:15px;color:var(--ink2);margin-bottom:28px;}
+.units-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;}
+.unit-card{background:var(--surface);border:2.5px solid var(--ink);border-radius:var(--radius);padding:14px 14px 12px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;}
+.unit-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:4px;background:var(--unit-color);}
+.unit-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+.uc-num{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--unit-color);margin-bottom:2px;}
+.uc-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;text-transform:uppercase;line-height:1.1;color:var(--ink);margin-bottom:4px;}
+.uc-sub{font-size:11px;color:var(--ink3);font-weight:600;margin-bottom:8px;}
+.uc-count{font-size:11px;color:var(--ink3);font-weight:700;border-top:1px solid var(--border);padding-top:6px;}
+
+/* ── UNIT PAGE ── */
+#unit-page{max-width:760px;margin:0 auto;padding:24px 20px;}
+.up-label{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;}
+.up-title{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;text-transform:uppercase;line-height:1;margin-bottom:4px;}
+.up-sub{font-size:14px;color:var(--ink2);margin-bottom:20px;}
+.modes-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mode-tile{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;transition:all .15s;}
+.mode-tile:hover{border-color:var(--unit-color);background:var(--surface2);transform:translateY(-2px);}
+.mt-icon{font-size:26px;margin-bottom:6px;display:block;}
+.mt-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;text-transform:uppercase;color:var(--ink);margin-bottom:2px;}
+.mt-desc{font-size:12px;color:var(--ink2);}
+
+/* ── SHARED ── */
+.mode-wrap{max-width:600px;margin:0 auto;padding:18px 20px;}
+.mode-badge{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:4px 12px;border:2px solid currentColor;border-radius:4px;margin-bottom:14px;}
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.prog-wrap{flex:1;height:8px;background:var(--border);border-radius:10px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--unit-color);border-radius:10px;transition:width .4s;}
+.prog-num{font-size:13px;font-weight:700;color:var(--ink2);white-space:nowrap;}
+.score-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.score-chip{background:var(--surface);border:2px solid var(--border);border-radius:4px;padding:4px 12px;font-size:13px;font-weight:700;color:var(--ink2);}
+.score-chip b{color:var(--ink);}
+.fb-line{text-align:center;font-size:15px;font-weight:700;min-height:22px;margin-bottom:10px;}
+.fb-line.good{color:var(--green);}
+.fb-line.bad{color:var(--red);}
+
+/* ── FLASHCARDS ── */
+.card-scene{perspective:1100px;height:260px;cursor:pointer;margin-bottom:14px;}
+.card-inner{width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s ease;position:relative;}
+.card-inner.flipped{transform:rotateY(180deg);}
+.card-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius);padding:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:2.5px solid var(--ink);}
+.card-front{background:var(--surface);}
+.card-back{background:var(--ink);transform:rotateY(180deg);}
+.card-pos{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:3px 10px;border:1.5px solid var(--unit-color);color:var(--unit-color);border-radius:4px;margin-bottom:10px;}
+.card-emoji{font-size:34px;margin-bottom:8px;}
+.card-sent{font-size:15px;color:var(--ink2);line-height:1.6;}
+.card-blank{font-weight:800;color:var(--ink);}
+.card-tap{font-size:11px;color:var(--ink3);margin-top:8px;font-weight:600;}
+.card-word{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;text-transform:uppercase;color:var(--yellow);margin-bottom:6px;line-height:1;}
+.card-pos-b{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.5);margin-bottom:8px;}
+.card-def{font-size:13px;color:rgba(255,255,255,.8);line-height:1.5;max-width:320px;}
+.fc-btns{display:flex;gap:10px;}
+.fc-btn{flex:1;padding:12px;border-radius:var(--radius-sm);font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;border:2px solid;transition:transform .12s;}
+.fc-btn:active{transform:scale(.97);}
+.fc-btn.dont{background:var(--red-l);color:var(--red);border-color:var(--red);}
+.fc-btn.know{background:var(--green-l);color:var(--green);border-color:var(--green);}
+.fc-stats{display:flex;gap:10px;margin-bottom:12px;}
+.fc-stat{flex:1;text-align:center;padding:6px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-weight:700;}
+.fc-stat.k{color:var(--green);border-color:var(--green);}
+.fc-stat.d{color:var(--red);border-color:var(--red);}
+
+/* ── QUIZ ── */
+.qz-card{background:var(--surface);border:2.5px solid var(--ink);border-radius:var(--radius);padding:20px;margin-bottom:12px;}
+.qz-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink3);margin-bottom:6px;}
+.qz-emoji{font-size:30px;margin-bottom:8px;}
+.qz-text{font-size:15px;color:var(--ink);line-height:1.6;}
+.qz-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.qz-opt{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius-sm);padding:11px 13px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--ink);text-align:left;}
+.qz-opt:hover:not(.answered){border-color:var(--unit-color);background:var(--surface2);}
+.qz-opt.correct{background:var(--green-l);border-color:var(--green);color:var(--green);}
+.qz-opt.wrong{background:var(--red-l);border-color:var(--red);color:var(--red);}
+.qz-opt.show-r{background:var(--green-l);border-color:var(--green);color:var(--green);}
+.next-btn{width:100%;padding:12px;border-radius:var(--radius-sm);background:var(--ink);color:var(--yellow);font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;text-transform:uppercase;border:none;cursor:pointer;display:none;letter-spacing:.5px;}
+.next-btn.show{display:block;}
+
+/* ── UNSCRAMBLE ── */
+.un-ctx{background:var(--surface);border:2.5px solid var(--ink);border-radius:var(--radius);padding:16px;margin-bottom:12px;text-align:center;}
+.ans-slots{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;min-height:48px;margin-bottom:10px;align-items:flex-end;}
+.aslot{min-width:36px;height:38px;border-bottom:3px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;cursor:pointer;padding:0 3px;transition:border-color .15s;}
+.aslot.filled{border-bottom-color:var(--unit-color);}
+.aslot.gap{border:none;width:12px;}
+.aslot.ok{border-bottom-color:var(--green);color:var(--green);}
+.aslot.fail{border-bottom-color:var(--red);color:var(--red);}
+.lpool{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:10px;min-height:46px;}
+.lbtn{width:38px;height:38px;background:var(--surface);border:2px solid var(--ink);border-radius:var(--radius-sm);font-family:'Barlow',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .12s;color:var(--ink);}
+.lbtn:hover{background:var(--yellow);border-color:var(--ink);}
+.lbtn.used{opacity:.2;pointer-events:none;}
+.un-btns{display:flex;gap:8px;justify-content:center;}
+
+/* ── FILL / WRITE ── */
+.fill-card{background:var(--surface);border:2.5px solid var(--ink);border-radius:var(--radius);padding:18px;margin-bottom:12px;text-align:center;}
+.fill-hint{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;letter-spacing:4px;text-transform:uppercase;margin-bottom:4px;}
+.fill-pos{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--ink3);}
+.fill-ctx{font-size:14px;color:var(--ink2);line-height:1.6;margin-top:8px;}
+.input-row{display:flex;gap:8px;margin-bottom:10px;}
+.txt-input{flex:1;padding:10px 13px;border:2px solid var(--border);border-radius:var(--radius-sm);font-family:'Barlow',sans-serif;font-size:15px;font-weight:600;color:var(--ink);background:var(--surface);outline:none;transition:border-color .2s;}
+.txt-input:focus{border-color:var(--unit-color);}
+.txt-input.ok{border-color:var(--green);background:var(--green-l);}
+.txt-input.fail{border-color:var(--red);background:var(--red-l);}
+.check-btn{padding:10px 20px;border-radius:var(--radius-sm);background:var(--unit-color);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;text-transform:uppercase;border:none;cursor:pointer;}
+
+/* ── RESULT ── */
+.result-card{background:var(--surface);border:2.5px solid var(--ink);border-radius:var(--radius);padding:32px 22px;text-align:center;}
+.r-icon{font-size:52px;margin-bottom:10px;}
+.r-title{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;text-transform:uppercase;margin-bottom:8px;}
+.r-score{font-family:'Barlow Condensed',sans-serif;font-size:52px;font-weight:900;color:var(--unit-color);margin-bottom:6px;}
+.r-sub{font-size:14px;color:var(--ink2);margin-bottom:20px;line-height:1.5;}
+.btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.abtn{padding:10px 20px;border-radius:var(--radius-sm);font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;border:2px solid var(--border);background:var(--surface);color:var(--ink);transition:all .15s;}
+.abtn:hover{background:var(--surface2);}
+.abtn.primary{background:var(--ink);color:var(--yellow);border-color:var(--ink);}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--yellow);padding:10px 22px;border-radius:4px;font-size:14px;font-weight:700;z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;border:2px solid var(--yellow);}
+#toast.show{transform:translateX(-50%) translateY(0);}
+
+@media(max-width:480px){
+  .modes-grid,.qz-opts{grid-template-columns:1fr;}
+  .fc-btns{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<div class="app-bar">
+  <div class="app-logo">Prepare! <span>Level 5</span></div>
+  <button class="hdr-btn" id="back-btn" style="display:none" onclick="goBack()">← Back</button>
+</div>
+
+<div id="home" class="screen active">
+  <div style="max-width:820px;margin:0 auto;padding:28px 20px">
+    <div class="home-kicker">Cambridge English · Vocabulary Practice</div>
+    <h1 class="home-title">Prepare!<br><span>Level 5</span></h1>
+    <p class="home-sub">Choose a unit to practise. All vocabulary from your coursebook — with simple definitions and example sentences.</p>
+    <div class="units-grid" id="units-grid"></div>
+  </div>
+</div>
+
+<div id="unit-page" class="screen">
+  <div style="max-width:760px;margin:0 auto;padding:24px 20px">
+    <div class="up-label" id="up-label"></div>
+    <div class="up-title" id="up-title"></div>
+    <p class="up-sub" id="up-sub"></p>
+    <div class="modes-grid">
+      <div class="mode-tile" onclick="startMode('flash')"><span class="mt-icon">🃏</span><div class="mt-title">Flashcards</div><div class="mt-desc">See the example, flip to reveal the word</div></div>
+      <div class="mode-tile" onclick="startMode('quiz')"><span class="mt-icon">🧠</span><div class="mt-title">Quiz</div><div class="mt-desc">Pick the correct word from 6 options</div></div>
+      <div class="mode-tile" onclick="startMode('unscramble')"><span class="mt-icon">🔀</span><div class="mt-title">Unscramble</div><div class="mt-desc">Tap letters to build the word</div></div>
+      <div class="mode-tile" onclick="startMode('fill')"><span class="mt-icon">✏️</span><div class="mt-title">Fill in</div><div class="mt-desc">First letters given — complete the word</div></div>
+      <div class="mode-tile" onclick="startMode('write')" style="border-style:dashed"><span class="mt-icon">📝</span><div class="mt-title">Write it!</div><div class="mt-desc">Final test — type from memory</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FLASHCARDS -->
+<div id="flash-screen" class="screen">
+  <div class="mode-wrap">
+    <div class="mode-badge" style="color:var(--blue)">🃏 Flashcards</div>
+    <div class="prog-row"><div class="prog-wrap"><div class="prog-fill" id="fl-prog"></div></div><div class="prog-num" id="fl-ctr">1/20</div></div>
+    <div class="fc-stats"><div class="fc-stat k">✓ Know: <span id="fl-k">0</span></div><div class="fc-stat d">✗ Learning: <span id="fl-d">0</span></div></div>
+    <div id="fl-area">
+      <div class="card-scene" onclick="flipCard()">
+        <div class="card-inner" id="fl-ci">
+          <div class="card-face card-front">
+            <div class="card-pos" id="fl-pos"></div>
+            <div class="card-emoji" id="fl-em"></div>
+            <div class="card-sent" id="fl-sent"></div>
+            <div class="card-tap">👆 Tap to reveal</div>
+          </div>
+          <div class="card-face card-back">
+            <div class="card-pos-b" id="fl-posb"></div>
+            <div class="card-word" id="fl-wb"></div>
+            <div class="card-def" id="fl-db"></div>
+          </div>
+        </div>
+      </div>
+      <div class="fc-btns" id="fl-btns" style="display:none">
+        <button class="fc-btn dont" onclick="fcAns(false)">✗ Still learning</button>
+        <button class="fc-btn know" onclick="fcAns(true)">✓ I know it!</button>
+      </div>
+    </div>
+    <div class="result-card" id="fl-res" style="display:none">
+      <div class="r-icon">🎉</div><div class="r-title">Round complete!</div>
+      <div class="fc-stats" style="justify-content:center;gap:16px;margin-bottom:14px">
+        <div class="fc-stat k">✓ <span id="fl-rk">0</span></div><div class="fc-stat d">✗ <span id="fl-rd">0</span></div>
+      </div>
+      <div class="r-sub" id="fl-rmsg"></div>
+      <div class="btn-row"><button class="abtn" onclick="startMode('flash')">↺ Again</button><button class="abtn primary" onclick="showUnitPage()">← Modes</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz-screen" class="screen">
+  <div class="mode-wrap">
+    <div class="mode-badge" style="color:var(--purple)">🧠 Quiz</div>
+    <div class="prog-row"><div class="prog-wrap"><div class="prog-fill" id="qz-prog"></div></div><div class="prog-num" id="qz-ctr">1/20</div></div>
+    <div class="score-row"><div class="score-chip">⭐ <b id="qz-sc">0</b> pts</div><div class="score-chip">🔥 <b id="qz-st">0</b></div></div>
+    <div id="qz-area">
+      <div class="qz-card"><div class="qz-label" id="qz-lbl"></div><div class="qz-emoji" id="qz-em"></div><div class="qz-text" id="qz-q"></div></div>
+      <div class="fb-line" id="qz-fb"></div>
+      <div class="qz-opts" id="qz-opts"></div>
+      <button class="next-btn" id="qz-next" onclick="qzNext()">Next →</button>
+    </div>
+    <div class="result-card" id="qz-res" style="display:none">
+      <div class="r-icon" id="qz-ric">🏆</div><div class="r-title">Quiz done!</div>
+      <div class="r-score" id="qz-rsc"></div><div class="r-sub" id="qz-rmsg"></div>
+      <div class="btn-row"><button class="abtn" onclick="startMode('quiz')">↺ Retry</button><button class="abtn primary" onclick="showUnitPage()">← Modes</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- UNSCRAMBLE -->
+<div id="un-screen" class="screen">
+  <div class="mode-wrap">
+    <div class="mode-badge" style="color:var(--orange)">🔀 Unscramble</div>
+    <div class="prog-row"><div class="prog-wrap"><div class="prog-fill" id="un-prog"></div></div><div class="prog-num" id="un-ctr">1/20</div></div>
+    <div id="un-area">
+      <div class="un-ctx"><div style="font-size:26px;margin-bottom:6px" id="un-em"></div><div style="font-size:14px;color:var(--ink2);line-height:1.5" id="un-def"></div></div>
+      <div class="ans-slots" id="un-slots"></div>
+      <div class="lpool" id="un-pool"></div>
+      <div class="fb-line" id="un-fb"></div>
+      <div class="un-btns"><button class="abtn" onclick="unClear()">Clear</button><button class="abtn primary" onclick="unCheck()">Check ✓</button></div>
+    </div>
+    <div class="result-card" id="un-res" style="display:none">
+      <div class="r-icon">🔀</div><div class="r-title">Done!</div>
+      <div class="r-score" id="un-rsc"></div><div class="r-sub" id="un-rmsg"></div>
+      <div class="btn-row"><button class="abtn" onclick="startMode('unscramble')">↺ Retry</button><button class="abtn primary" onclick="showUnitPage()">← Modes</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- FILL -->
+<div id="fill-screen" class="screen">
+  <div class="mode-wrap">
+    <div class="mode-badge" style="color:var(--green)">✏️ Fill in</div>
+    <div class="prog-row"><div class="prog-wrap"><div class="prog-fill" id="fi-prog"></div></div><div class="prog-num" id="fi-ctr">1/20</div></div>
+    <div id="fi-area">
+      <div class="fill-card"><div class="fill-hint" id="fi-hint"></div><div class="fill-pos" id="fi-pos"></div><div class="fill-ctx" id="fi-ctx"></div></div>
+      <div class="input-row"><input type="text" class="txt-input" id="fi-in" placeholder="Type the word..." onkeydown="if(event.key==='Enter')fiCheck()"><button class="check-btn" onclick="fiCheck()">Check</button></div>
+      <div class="fb-line" id="fi-fb"></div>
+      <button class="next-btn" id="fi-next" onclick="fiNext()">Next →</button>
+    </div>
+    <div class="result-card" id="fi-res" style="display:none">
+      <div class="r-icon">✏️</div><div class="r-title">Fill in done!</div>
+      <div class="r-score" id="fi-rsc"></div><div class="r-sub" id="fi-rmsg"></div>
+      <div class="btn-row"><button class="abtn" onclick="startMode('fill')">↺ Retry</button><button class="abtn primary" onclick="showUnitPage()">← Modes</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- WRITE -->
+<div id="write-screen" class="screen">
+  <div class="mode-wrap">
+    <div class="mode-badge" style="color:var(--red)">📝 Write it!</div>
+    <div class="prog-row"><div class="prog-wrap"><div class="prog-fill" id="wr-prog"></div></div><div class="prog-num" id="wr-ctr">1/20</div></div>
+    <div id="wr-area">
+      <div class="fill-card"><div style="font-size:28px;margin-bottom:8px" id="wr-em"></div><div style="font-size:15px;line-height:1.6;margin-bottom:6px" id="wr-def"></div><div style="font-size:13px;color:var(--ink2);font-style:italic;line-height:1.5" id="wr-ex"></div></div>
+      <div class="input-row"><input type="text" class="txt-input" id="wr-in" placeholder="Type the word..." onkeydown="if(event.key==='Enter')wrCheck()"><button class="check-btn" onclick="wrCheck()">Check</button></div>
+      <div class="fb-line" id="wr-fb"></div>
+      <button class="next-btn" id="wr-next" onclick="wrNext()">Next →</button>
+    </div>
+    <div class="result-card" id="wr-res" style="display:none">
+      <div class="r-icon">🏆</div><div class="r-title">Final test done!</div>
+      <div class="r-score" id="wr-rsc"></div><div class="r-sub" id="wr-rmsg"></div>
+      <div class="btn-row"><button class="abtn" onclick="startMode('write')">↺ Retry</button><button class="abtn primary" onclick="showUnitPage()">← Modes</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  DATA — Prepare! Level 5
+// ═══════════════════════════════════════════════
+const UNITS = [
+{id:'u1',num:'Unit 1',title:'Going shopping',topic:'Shopping vocabulary',color:'#e03030',words:[
+  {w:'charge',pos:'v',e:'💳',def:'to ask someone to pay a particular amount of money for something',ex:'The hotel charges £50 per night for a single room.'},
+  {w:'charges',pos:'n',e:'💰',def:'amounts of money that you have to pay for a service',ex:'There are extra charges for using the gym in this hotel.'},
+  {w:'discount',pos:'n',e:'🏷️',def:'a reduction in the normal price of something',ex:'Students get a 10% discount at this bookshop.'},
+  {w:'exchange',pos:'v',e:'🔄',def:'to take something back to a shop and change it for something else',ex:'I exchanged the blue jacket for a red one because I preferred it.'},
+  {w:'online shopping',pos:'n',e:'💻',def:'the activity of buying things on the internet',ex:'Online shopping is very convenient because you can do it from home.'},
+  {w:'promotions',pos:'n',e:'📢',def:'activities to advertise something and encourage people to buy it',ex:'The shop has lots of special promotions before Christmas.'},
+  {w:'purchases',pos:'n',e:'🛍️',def:'the things you buy; the act of buying something',ex:'Keep your receipt for all purchases in case you need to return them.'},
+  {w:'receipt',pos:'n',e:'🧾',def:'a piece of paper that proves you have paid for something',ex:'Always keep your receipt when you buy something expensive.'},
+  {w:'refunds',pos:'n',e:'💵',def:'money that is given back to you when you return something you bought',ex:'The shop gives refunds if you bring the product back within 30 days.'},
+  {w:'send sth back',pos:'phr vb',e:'📦',def:'to return something to the person or place that sent it to you',ex:'The shirt was the wrong size so I sent it back to the website.'},
+  {w:'serve',pos:'v',e:'🤝',def:'to help customers and sell things to them in a shop',ex:'The assistant served us quickly and we found exactly what we needed.'},
+  {w:'service',pos:'n',e:'⭐',def:'the work that people do to help customers in shops and restaurants',ex:'The service in this restaurant is excellent — they are very friendly.'},
+  {w:'shop',pos:'v',e:'🛒',def:'to go to shops to buy things',ex:'She loves to shop for clothes on Saturday afternoons.'},
+  {w:'spend',pos:'v',e:'💸',def:'to use money to buy or pay for something',ex:'He spent all his pocket money on a new video game.'},
+  {w:'disagree',pos:'v',e:'🤔',def:'to have a different opinion from someone else',ex:'We disagree about which film to watch — she wants comedy but I want action.'},
+  {w:'disappear',pos:'v',e:'👻',def:'to become impossible to see or find',ex:'My keys always disappear when I am in a hurry.'},
+  {w:'dislike',pos:'v',e:'👎',def:'to not like someone or something',ex:'She dislikes loud music — she prefers silence when she studies.'},
+  {w:'unhappy',pos:'adj',e:'😢',def:'not happy; sad',ex:'He was unhappy with his exam results and decided to study harder.'},
+  {w:'uninteresting',pos:'adj',e:'😴',def:'not interesting or enjoyable',ex:'The lesson was uninteresting because the teacher just read from the book.'},
+  {w:'unkind',pos:'adj',e:'😒',def:'slightly cruel; not caring about other people\'s feelings',ex:'It was unkind to say she looked tired — it really upset her.'},
+  {w:'unlucky',pos:'adj',e:'🍀',def:'having bad things happen to you',ex:'He was unlucky — he missed the bus and was late for his interview.'},
+  {w:'unpleasant',pos:'adj',e:'🤢',def:'not enjoyable or pleasant',ex:'The smell from the factory was very unpleasant.'},
+  {w:'unreliable',pos:'adj',e:'❌',def:'someone or something you cannot trust or depend on',ex:'The bus service is unreliable — sometimes it is 20 minutes late.'},
+]},
+{id:'u2',num:'Unit 2',title:'Best friends forever',topic:'Personality adjectives',color:'#1a6fd4',words:[
+  {w:'annoying',pos:'adj',e:'😤',def:'making you feel annoyed or slightly angry',ex:'It\'s really annoying when people talk loudly on their phones on the train.'},
+  {w:'anxious',pos:'adj',e:'😰',def:'worried and nervous about something',ex:'She felt anxious before her first day at the new school.'},
+  {w:'easygoing',pos:'adj',e:'😎',def:'relaxed and not easily upset or worried',ex:'He\'s very easygoing — he never gets stressed about small problems.'},
+  {w:'jealous',pos:'adj',e:'💚',def:'unhappy and angry because you want something that someone else has',ex:'She was jealous of her sister\'s new bike.'},
+  {w:'loyal',pos:'adj',e:'💜',def:'always liking and supporting someone, even when things are difficult',ex:'A loyal friend will stand by you even when you make mistakes.'},
+  {w:'reliable',pos:'adj',e:'🔒',def:'able to be trusted; someone who does what they say they will do',ex:'She is very reliable — if she says she will help, she always does.'},
+  {w:'sensible',pos:'adj',e:'🧠',def:'showing good judgment; making practical, logical decisions',ex:'It was sensible to bring an umbrella — it rained all afternoon.'},
+  {w:'silly',pos:'adj',e:'🤪',def:'not taking things seriously; acting in a childish way',ex:'He felt silly after falling over in front of everyone.'},
+  {w:'sociable',pos:'adj',e:'🎉',def:'enjoying spending time with other people and making new friends',ex:'She is very sociable and always knows everyone at a party.'},
+  {w:'thoughtful',pos:'adj',e:'💭',def:'kind and always thinking about how you can help other people',ex:'He was thoughtful enough to remember her birthday and send a card.'},
+  {w:'talented',pos:'adj',e:'⭐',def:'having a natural ability to do something very well',ex:'She is a talented musician who plays piano and guitar.'},
+]},
+{id:'u3',num:'Unit 3',title:'Fun and games',topic:'Sports phrases & suffixes',color:'#1fa060',words:[
+  {w:'beat the other team',pos:'phr',e:'🏆',def:'to defeat or do better than someone in a competition',ex:'We beat the other team 3-0 and won the championship.'},
+  {w:'enter a competition',pos:'phr',e:'📋',def:'to take part in a competition or tournament',ex:'She entered a competition to win free concert tickets.'},
+  {w:'give someone the chance',pos:'phr',e:'🎁',def:'to provide someone with an opportunity to do something',ex:'The coach gave the new player the chance to start in the match.'},
+  {w:'have a go at something',pos:'phr',e:'🎯',def:'to try something you have not done before',ex:'I had a go at rock climbing and loved it.'},
+  {w:'join a club',pos:'phr',e:'🤝',def:'to become a member of a club or organisation',ex:'She joined a swimming club to improve her technique.'},
+  {w:'lose a game or match',pos:'phr',e:'😔',def:'to not win a game or competition',ex:'We lost the match 1-2 but we played really well.'},
+  {w:'miss an opportunity',pos:'phr',e:'😢',def:'to not use a chance to do something',ex:'He missed an opportunity to score because he hesitated.'},
+  {w:'score a goal or point',pos:'phr',e:'⚽',def:'to get points in a game or test',ex:'She scored three goals in the final match.'},
+  {w:'win a prize, medal, game or match',pos:'phr',e:'🥇',def:'to get the most points, or to get a prize in a competition',ex:'He won a gold medal at the national athletics championship.'},
+  {w:'canoeist',pos:'n',e:'🛶',def:'a person who travels in a canoe',ex:'The canoeist paddled down the river in under two hours.'},
+  {w:'climber',pos:'n',e:'🧗',def:'someone who climbs mountains, hills or rocks as a sport',ex:'The climber reached the top of the mountain after six hours.'},
+  {w:'competitor',pos:'n',e:'🏅',def:'someone who is trying to win a competition',ex:'There were over 200 competitors in the swimming race.'},
+  {w:'footballer',pos:'n',e:'⚽',def:'someone who plays football, especially as their job',ex:'She became a professional footballer at the age of 17.'},
+  {w:'runner',pos:'n',e:'🏃',def:'someone who runs',ex:'The runner finished the marathon in just over three hours.'},
+  {w:'sailor',pos:'n',e:'⛵',def:'someone who sails ships or boats as their job or as a sport',ex:'He has been a sailor since he was a teenager and loves the sea.'},
+  {w:'spectator',pos:'n',e:'👏',def:'someone who watches an event, sport, etc.',ex:'Thousands of spectators came to watch the final.'},
+  {w:'surfer',pos:'n',e:'🏄',def:'someone who surfs',ex:'The surfer caught an enormous wave and rode it to the beach.'},
+  {w:'swimmer',pos:'n',e:'🏊',def:'someone who swims',ex:'She is an excellent swimmer and trains every morning.'},
+  {w:'winner',pos:'n',e:'🏆',def:'someone who wins a game, competition or election',ex:'The winner of the competition received a scholarship to study abroad.'},
+]},
+{id:'u4',num:'Unit 4',title:'Extreme weather',topic:'Weather & phrasal verbs',color:'#7c3aed',words:[
+  {w:'blow',pos:'v',e:'💨',def:'if the wind blows, it moves and makes currents of air',ex:'The wind blew so strongly that it knocked over the garden furniture.'},
+  {w:'earthquake',pos:'n',e:'🌍',def:'a sudden movement of the Earth\'s surface, often causing severe damage',ex:'The earthquake destroyed hundreds of buildings in the city.'},
+  {w:'fall down',pos:'v',e:'⬇️',def:'to fall onto the ground',ex:'The tree fell down during the storm and blocked the road.'},
+  {w:'flood',pos:'n',e:'🌊',def:'a situation where a lot of water covers an area that is usually dry',ex:'The flood destroyed many homes near the river.'},
+  {w:'flow',pos:'v',e:'💧',def:'if a liquid flows, it moves somewhere in a smooth, continuous way',ex:'After the heavy rain, water flowed down the streets like a river.'},
+  {w:'lightning',pos:'n',e:'⚡',def:'a sudden flash of light in the sky during a storm',ex:'We saw lightning in the distance and knew the storm was coming.'},
+  {w:'pour',pos:'v',e:'🌧️',def:'to rain a lot',ex:'It poured all day so we stayed inside and watched films.'},
+  {w:'rise',pos:'v',e:'📈',def:'to increase in level',ex:'The river rose rapidly after two days of heavy rain.'},
+  {w:'shake',pos:'v',e:'🤝',def:'to make quick, short movements from side to side or up and down',ex:'The ground shook when the train passed under the street.'},
+  {w:'snowstorm',pos:'n',e:'❄️',def:'a storm when a lot of snow falls',ex:'The snowstorm closed the airport and all flights were cancelled.'},
+  {w:'tornado',pos:'n',e:'🌪️',def:'an extremely strong and dangerous wind that moves in a circle and destroys things',ex:'The tornado destroyed everything in its path within minutes.'},
+  {w:'blow away',pos:'phr vb',e:'🍃',def:'to be moved or make something move on a current of air',ex:'My hat blew away in the wind and landed in the lake.'},
+  {w:'burn down',pos:'phr vb',e:'🔥',def:'to destroy something, especially a building, by fire, or to be destroyed by fire',ex:'The old factory burned down and nothing was left.'},
+  {w:'clear up',pos:'phr vb',e:'🌤️',def:'if the weather clears up, the cloud and rain disappear',ex:'The weather cleared up in the afternoon and we went for a walk.'},
+  {w:'come out',pos:'phr vb',e:'☀️',def:'if the sun, moon or a star comes out, it appears in the sky',ex:'The sun came out after lunch and it turned into a lovely day.'},
+  {w:'put out',pos:'phr vb',e:'🚒',def:'to stop something burning',ex:'The firefighters put out the fire in less than an hour.'},
+]},
+{id:'u5',num:'Unit 5',title:'You made it!',topic:'Verbs for making things',color:'#e06a00',words:[
+  {w:'create',pos:'v',e:'✨',def:'to make something happen or exist',ex:'She created a beautiful painting for the school art competition.'},
+  {w:'customise',pos:'v',e:'🎨',def:'to change something to make it suitable for a particular person or purpose',ex:'You can customise your phone with different apps and settings.'},
+  {w:'decorate',pos:'v',e:'🖼️',def:'to make something look more attractive by putting things on it or around it',ex:'We decorated the classroom with colourful posters and balloons.'},
+  {w:'design',pos:'v',e:'📐',def:'to draw or plan something before making it',ex:'She designed the dress herself before sewing it.'},
+  {w:'fix',pos:'v',e:'🔧',def:'to repair something',ex:'He fixed the broken bicycle in just 20 minutes.'},
+  {w:'mend',pos:'v',e:'🪡',def:'to repair something that is broken, torn, or not working correctly',ex:'She mended the hole in her jumper with matching wool.'},
+  {w:'rebuild',pos:'v',e:'🏗️',def:'to build something again after it has been damaged',ex:'After the earthquake, the community worked together to rebuild their homes.'},
+  {w:'recycle',pos:'v',e:'♻️',def:'to put used paper, glass, plastic, etc. through a process so it can be used again',ex:'We recycle all our plastic bottles and cardboard at school.'},
+  {w:'sew',pos:'v',e:'🪡',def:'to join things together with a needle and thread',ex:'She sewed a button back onto her coat after it fell off.'},
+]},
+{id:'u6',num:'Unit 6',title:'Take care of yourself',topic:'Health verbs',color:'#be185d',words:[
+  {w:'ache',pos:'v',e:'🤕',def:'if a part of your body aches, it is painful',ex:'My legs ached after running the marathon.'},
+  {w:'beat',pos:'v',e:'❤️',def:'when your heart beats, it makes regular movements and sounds',ex:'His heart was beating fast after the sprint.'},
+  {w:'bleed',pos:'v',e:'🩸',def:'to have blood coming from a place in your body',ex:'She cut her finger and it started to bleed.'},
+  {w:'blink',pos:'v',e:'👁️',def:'to open and close your eyes quickly',ex:'He blinked in the bright sunlight as he walked outside.'},
+  {w:'blow your nose',pos:'phr vb',e:'🤧',def:'to clear your nose by forcing air through it',ex:'She blew her nose and threw the tissue in the bin.'},
+  {w:'breathe',pos:'v',e:'🫁',def:'to take air into and out of your lungs',ex:'Take a deep breath and breathe slowly to feel calm.'},
+  {w:'burn',pos:'v',e:'🔥',def:'to be hurt by fire or heat',ex:'She burned her hand on the hot pan.'},
+  {w:'cough',pos:'v',e:'😷',def:'to make air come out of your throat with a short sound',ex:'He coughed all night because of his cold.'},
+  {w:'cut',pos:'v',e:'🩹',def:'to injure yourself on a sharp object that makes you bleed',ex:'He cut his finger while chopping vegetables.'},
+  {w:'injure',pos:'v',e:'🤕',def:'to hurt a part of your body',ex:'She injured her knee during the football match.'},
+  {w:'recover',pos:'v',e:'💪',def:'to become healthy or happy again after an illness, injury, or period of sadness',ex:'It took her two weeks to recover from the flu.'},
+  {w:'yawn',pos:'v',e:'🥱',def:'to take a deep breath with your mouth wide open, because you are tired or bored',ex:'She yawned during the lesson because she had slept badly.'},
+]},
+{id:'u7',num:'Unit 7',title:'Sound check',topic:'Music vocabulary',color:'#0891b2',words:[
+  {w:'celebrity',pos:'n',e:'🌟',def:'a famous person, especially in entertainment',ex:'The celebrity arrived at the film premiere and fans went crazy.'},
+  {w:'clip',pos:'n',e:'🎬',def:'a short part of a film or television programme',ex:'They showed a clip from the new film on the news.'},
+  {w:'concert hall',pos:'n',e:'🏛️',def:'a large building where concerts are performed',ex:'The orchestra performed at the famous concert hall in the city centre.'},
+  {w:'DJ',pos:'n',e:'🎧',def:'someone who plays music on the radio or at discos',ex:'The DJ played great music and everyone danced all night.'},
+  {w:'festival',pos:'n',e:'🎪',def:'a series of events, performances, etc. that often takes place over several days',ex:'They went to a music festival in the summer and camped overnight.'},
+  {w:'gig',pos:'n',e:'🎸',def:'a performance of pop or rock music',ex:'The band played their first gig at a small local venue.'},
+  {w:'guitarist',pos:'n',e:'🎸',def:'someone who plays the guitar, especially as their job',ex:'The guitarist was so talented — the crowd cheered after every solo.'},
+  {w:'live',pos:'adj',e:'🎤',def:'a live performance is done with an audience, not recorded',ex:'Seeing them live in concert was totally different from listening to their album.'},
+  {w:'lyrics',pos:'n',e:'📜',def:'the words of a song',ex:'She learned all the lyrics of her favourite song in just one day.'},
+  {w:'music channel',pos:'n',e:'📺',def:'a television channel that shows music videos and programmes about music',ex:'I watched a music channel all afternoon and discovered some great new artists.'},
+  {w:'musician',pos:'n',e:'🎵',def:'someone who plays a musical instrument, often as a job',ex:'She trained as a musician for 10 years before joining a professional orchestra.'},
+  {w:'music video',pos:'n',e:'🎥',def:'a short film made to go with a popular song',ex:'Their music video was watched 50 million times in the first week.'},
+  {w:'production',pos:'n',e:'🎭',def:'the job of controlling how a film, play, programme or musical recording is made',ex:'The production of the film took over two years to complete.'},
+  {w:'sound technician',pos:'n',e:'🎛️',def:'someone who works with the equipment in a recording studio',ex:'The sound technician made sure every instrument was perfectly balanced.'},
+  {w:'studio',pos:'n',e:'🏠',def:'a room where television or radio programmes or musical recordings are made',ex:'The band spent three weeks in the recording studio making their new album.'},
+]},
+{id:'u8',num:'Unit 8',title:'Amazing architecture',topic:'Describing buildings',color:'#059669',words:[
+  {w:'brand new',pos:'adj',e:'✨',def:'completely new',ex:'They moved into a brand new flat that had never been lived in before.'},
+  {w:'classic',pos:'adj',e:'🏛️',def:'typical of its kind; traditional and respected',ex:'The building has a classic design with tall columns and stone steps.'},
+  {w:'cosy',pos:'adj',e:'🛋️',def:'comfortable and warm',ex:'The café was small and cosy — perfect for a cold winter afternoon.'},
+  {w:'fresh',pos:'adj',e:'🌿',def:'new or different from what was there before',ex:'The room had a fresh coat of paint and looked completely different.'},
+  {w:'historic',pos:'adj',e:'📜',def:'important in history, or likely to be important in history',ex:'The historic building in the city centre is over 400 years old.'},
+  {w:'modern',pos:'adj',e:'🏙️',def:'relating to the present time and not the past',ex:'The modern office block looked out of place next to the old cathedral.'},
+  {w:'original',pos:'adj',e:'💎',def:'special and interesting because of not being the same as others',ex:'The architect had a very original idea for the roof of the building.'},
+  {w:'spectacular',pos:'adj',e:'🤩',def:'extremely good, exciting, or surprising',ex:'The view from the top of the tower was absolutely spectacular.'},
+  {w:'traditional',pos:'adj',e:'🏡',def:'following the customs or ways of behaving that have continued in a society for a long time',ex:'The village has traditional stone houses that have stood for centuries.'},
+  {w:'unusual',pos:'adj',e:'❓',def:'different and not ordinary, often in a way that is interesting or exciting',ex:'The museum has an unusual shape — it looks like a giant wave.'},
+  {w:'achieve',pos:'v',e:'🎯',def:'to succeed in doing something good, usually by working hard',ex:'She achieved her dream of becoming an architect after years of study.'},
+  {w:'achievement',pos:'n',e:'🏆',def:'something good that you have done that was difficult',ex:'Winning the design competition was a great achievement for the young student.'},
+  {w:'advertise',pos:'v',e:'📢',def:'to tell people about a product or service to persuade them to buy it',ex:'The company advertised their new building on television.'},
+  {w:'advertisement',pos:'n',e:'📰',def:'a picture, short film, song, etc. that tries to persuade people to buy something',ex:'The advertisement for the new café showed beautiful photos of the food.'},
+  {w:'entertain',pos:'v',e:'😄',def:'to keep someone interested and help them have an enjoyable time',ex:'The tour guide entertained the group with fascinating stories about the buildings.'},
+  {w:'entertainer',pos:'n',e:'🎭',def:'someone whose job is to entertain people by singing, telling jokes, etc.',ex:'The street entertainer juggled with fire outside the famous theatre.'},
+  {w:'entertaining',pos:'adj',e:'🎪',def:'interesting and helping someone to have an enjoyable time',ex:'The documentary about architecture was very entertaining.'},
+  {w:'entertainment',pos:'n',e:'🎬',def:'shows, films, television, or other performances or activities that entertain people',ex:'The city centre offers plenty of entertainment for visitors.'},
+  {w:'perform',pos:'v',e:'🎤',def:'to entertain people by acting, singing, dancing, etc.',ex:'The dancers performed in front of 2,000 people at the festival.'},
+  {w:'performance',pos:'n',e:'🌟',def:'acting, singing, dancing, or playing music to entertain people',ex:'Her performance as the lead actress won her a national award.'},
+  {w:'performer',pos:'n',e:'🎭',def:'someone who entertains people',ex:'The young performer received a standing ovation at the end of the show.'},
+  {w:'record',pos:'n',e:'💿',def:'a flat, round, plastic disc that music is stored on, used especially in the past',ex:'My grandfather has a collection of old vinyl records from the 1960s.'},
+  {w:'record',pos:'v',e:'🎙️',def:'to store sounds or pictures using electronic equipment so you can listen or see them again',ex:'They recorded the concert so they could watch it again later.'},
+  {w:'absolutely',pos:'adv',e:'💯',def:'used with strong adjectives to mean "very"',ex:'The view from the roof was absolutely incredible.'},
+  {w:'ancient',pos:'adj',e:'🏛️',def:'from a long time ago',ex:'The ancient ruins are over 2,000 years old.'},
+  {w:'enormous',pos:'adj',e:'🐘',def:'extremely large',ex:'The concert hall is enormous — it can hold 5,000 people.'},
+  {w:'exhausted',pos:'adj',e:'😴',def:'very tired',ex:'She was exhausted after climbing all the steps to the top of the tower.'},
+  {w:'extremely',pos:'adv',e:'⚡',def:'very',ex:'The building is extremely tall — you can see it from miles away.'},
+  {w:'freezing',pos:'adj',e:'🥶',def:'very cold',ex:'It was freezing inside the old castle — there was no heating.'},
+  {w:'incredibly',pos:'adv',e:'🤩',def:'very',ex:'The new stadium is incredibly well designed.'},
+  {w:'spectacular',pos:'adj',e:'✨',def:'extremely good, exciting, or surprising',ex:'The fireworks display at the opening ceremony was spectacular.'},
+  {w:'terrible',pos:'adj',e:'😖',def:'very bad, of low quality, or unpleasant',ex:'The weather was terrible so we stayed inside the museum all day.'},
+]},
+{id:'u9',num:'Unit 9',title:'The future is now',topic:'Technology',color:'#7c3aed',words:[
+  {w:'charge',pos:'v',e:'🔋',def:'to put electricity into something\'s battery',ex:'Remember to charge your phone before the long journey.'},
+  {w:'connection',pos:'n',e:'📡',def:'something that joins things together',ex:'The wifi connection was too slow to watch a video.'},
+  {w:'display',pos:'n',e:'📱',def:'electronic information that is shown on a computer screen',ex:'The display on the new phone is bigger and brighter than before.'},
+  {w:'experiments',pos:'n',e:'🔬',def:'tests, especially scientific ones, that you do to learn something or discover if something is true',ex:'Scientists ran experiments to test whether the new battery was safe.'},
+  {w:'fuel',pos:'n',e:'⛽',def:'a substance that is burned to provide heat or power',ex:'Electric cars use electricity instead of fuel.'},
+  {w:'invention',pos:'n',e:'💡',def:'something that has been designed or created for the first time',ex:'The invention of the internet changed the world completely.'},
+  {w:'plug in',pos:'phr vb',e:'🔌',def:'to connect a piece of electrical equipment to an electricity supply',ex:'Plug in your laptop before the battery runs out.'},
+  {w:'power',pos:'n',e:'⚡',def:'energy, usually electricity, that is used to provide light, heat, etc.',ex:'Solar panels convert sunlight into electrical power.'},
+  {w:'pump',pos:'n',e:'⚙️',def:'a piece of equipment that forces liquid or gas to move somewhere',ex:'The pump pushes water through the pipes to all parts of the building.'},
+  {w:'satellite',pos:'n',e:'🛰️',def:'a piece of equipment sent into space around the Earth to receive and send signals or collect information',ex:'The satellite sends weather information back to Earth every hour.'},
+]},
+{id:'u10',num:'Unit 10',title:'Animals in danger',topic:'Nature and wildlife',color:'#059669',words:[
+  {w:'creature',pos:'n',e:'🐾',def:'anything that lives but is not a plant',ex:'The ocean is full of fascinating creatures we have never discovered.'},
+  {w:'crop',pos:'n',e:'🌾',def:'a plant such as grains, fruits or vegetables grown in large amounts by farmers',ex:'The hot, dry summer destroyed most of the wheat crop.'},
+  {w:'endangered',pos:'adj',e:'🦁',def:'animals that may soon not exist because there are very few alive',ex:'Tigers are endangered and there are only a few thousand left in the wild.'},
+  {w:'environment',pos:'n',e:'🌍',def:'the air, land and water where people, animals and plants live',ex:'We must protect the environment for future generations.'},
+  {w:'habitat',pos:'n',e:'🌳',def:'the natural environment of an animal or plant',ex:'Deforestation is destroying the habitat of many species.'},
+  {w:'human',pos:'n',e:'👤',def:'a man, woman or child',ex:'Humans have been affecting the natural world for thousands of years.'},
+  {w:'hunting',pos:'n',e:'🏹',def:'chasing and killing animals for sport or food',ex:'Illegal hunting has reduced the elephant population dramatically.'},
+  {w:'jungle',pos:'n',e:'🌿',def:'an area of land, usually in tropical countries, where trees and plants grow close together',ex:'Scientists discovered a new species of frog in the Amazon jungle.'},
+  {w:'landscape',pos:'n',e:'🏔️',def:'the appearance of an area of land, especially in the countryside',ex:'The landscape changed dramatically after the forest fire.'},
+  {w:'population',pos:'n',e:'👥',def:'all the people or animals living in a particular area',ex:'The population of pandas in the wild has slowly started to increase.'},
+  {w:'rainforest',pos:'n',e:'🌲',def:'a forest with a lot of tall trees where it rains a lot',ex:'The Amazon rainforest produces 20% of the world\'s oxygen.'},
+  {w:'at first',pos:'phr',e:'1️⃣',def:'at the beginning of a situation or period of time',ex:'At first, she was nervous, but then she started to enjoy the hike.'},
+  {w:'at its best',pos:'phr',e:'⭐',def:'at the highest level of achievement or quality',ex:'The national park is at its best in spring when the flowers bloom.'},
+  {w:'at least',pos:'phr',e:'📏',def:'as much as, or more than, a number or amount',ex:'You need at least eight hours of sleep every night.'},
+  {w:'at long last',pos:'phr',e:'🎉',def:'finally',ex:'At long last, the scientists found a solution to the problem.'},
+  {w:'at once',pos:'phr',e:'⚡',def:'at the same time',ex:'Don\'t try to do everything at once — focus on one task.'},
+  {w:'at present',pos:'phr',e:'📅',def:'now',ex:'At present, the species is considered vulnerable, not yet extinct.'},
+  {w:'at risk',pos:'phr',e:'⚠️',def:'being in a situation where something bad is likely to happen',ex:'Many coastal towns are at risk from rising sea levels.'},
+]},
+{id:'u11',num:'Unit 11',title:'Off to school',topic:'School vocabulary',color:'#0891b2',words:[
+  {w:'attend',pos:'v',e:'🏫',def:'to go regularly to a particular school',ex:'She attends a boarding school about 50 miles from her home.'},
+  {w:'boarding school',pos:'n',e:'🏠',def:'a school where students live and study',ex:'He went to boarding school at 11 and only came home in the holidays.'},
+  {w:'break up',pos:'phr vb',e:'🎉',def:'when schools or colleges break up, the classes end and the holidays begin',ex:'School breaks up for summer at the end of July.'},
+  {w:'degree',pos:'n',e:'🎓',def:'a qualification given for completing a university course',ex:'She studied for four years to get her degree in biology.'},
+  {w:'do well',pos:'phr',e:'✅',def:'to be successful',ex:'She worked very hard and did well in all her exams.'},
+  {w:'do badly',pos:'phr',e:'❌',def:'to be unsuccessful',ex:'He did badly in his first exam because he hadn\'t revised enough.'},
+  {w:'education',pos:'n',e:'📚',def:'the process of teaching and learning in a school or college',ex:'A good education opens many doors in life.'},
+  {w:'primary',pos:'adj',e:'👶',def:'of or for the teaching of young children, especially those between five and eleven',ex:'She teaches at a primary school in the local village.'},
+  {w:'qualifications',pos:'n',e:'📜',def:'the skills, qualities, or experience that you need in order to do something',ex:'You need good qualifications to get a job as a doctor.'},
+  {w:'secondary',pos:'adj',e:'🧑',def:'relating to the education of children approximately between the ages of 11 and 18',ex:'She moved from primary to secondary school at the age of 11.'},
+  {w:'undergraduate',pos:'n',e:'🎓',def:'a student who is studying for their first university degree',ex:'As an undergraduate, she studied chemistry for three years.'},
+  {w:'year',pos:'n',e:'📅',def:'the year of education that a child is in',ex:'He is in Year 9 at secondary school — he is 13 years old.'},
+  {w:'classroom',pos:'n',e:'🏫',def:'a room in a school where students have lessons',ex:'The classroom had 30 desks and a large interactive whiteboard.'},
+  {w:'blackboard',pos:'n',e:'⬛',def:'a large board with a dark surface that teachers write on',ex:'The teacher wrote the new vocabulary on the blackboard.'},
+  {w:'break time',pos:'n',e:'⏰',def:'a short period of rest during the school day',ex:'At break time, the students went outside to play football.'},
+  {w:'bus stop',pos:'n',e:'🚌',def:'a place where a bus stops to allow passengers to get on and off',ex:'She waited at the bus stop for ten minutes before the school bus arrived.'},
+  {w:'head teacher',pos:'n',e:'👩‍💼',def:'the person in charge of a school',ex:'The head teacher announced that the school had won a national award.'},
+  {w:'homework',pos:'n',e:'📝',def:'work that teachers give students to do at home',ex:'She spent two hours doing her homework after school.'},
+  {w:'lunchtime',pos:'n',e:'🍽️',def:'the time when lunch is eaten',ex:'At lunchtime, students can eat in the canteen or bring their own food.'},
+  {w:'school bus',pos:'n',e:'🚌',def:'a bus for taking children to and from school',ex:'He takes the school bus every morning because his house is far away.'},
+  {w:'textbook',pos:'n',e:'📖',def:'a book about a particular subject, written for students',ex:'The science textbook has clear diagrams and explanations.'},
+  {w:'timetable',pos:'n',e:'📋',def:'a list of dates and times that shows when things will happen',ex:'She checked the timetable to see what lessons she had in the afternoon.'},
+  {w:'whiteboard',pos:'n',e:'⬜',def:'a large white board that teachers write on',ex:'The teacher drew a diagram on the whiteboard to explain the concept.'},
+]},
+{id:'u12',num:'Unit 12',title:'Getting around',topic:'Travel vocabulary',color:'#d97706',words:[
+  {w:'abroad',pos:'adv',e:'✈️',def:'in or to a foreign country',ex:'She spent the summer abroad, studying French in Paris.'},
+  {w:'be held up',pos:'phr vb',e:'⏳',def:'to be late or delayed',ex:'We were held up in traffic and missed the start of the film.'},
+  {w:'check in',pos:'phr vb',e:'🛫',def:'to show your ticket at an airport to say you have arrived for your flight',ex:'We checked in two hours before our flight and went to the gate.'},
+  {w:'go away',pos:'phr vb',e:'🏖️',def:'to leave your home in order to spend time in a different place, usually for a holiday',ex:'We are going away to the mountains for a week this summer.'},
+  {w:'land',pos:'v',e:'✈️',def:'if your flight lands, it arrives at its destination',ex:'The plane landed safely at Madrid airport at 6pm.'},
+  {w:'reach',pos:'v',e:'📍',def:'to arrive somewhere',ex:'After six hours of driving, we finally reached the hotel.'},
+  {w:'sail',pos:'v',e:'⛵',def:'to travel in a boat or a ship',ex:'They sailed from Southampton to New York in five days.'},
+  {w:'set off',pos:'phr vb',e:'🚀',def:'to start a journey',ex:'We set off early in the morning to avoid the traffic.'},
+  {w:'tour',pos:'n',e:'🗺️',def:'a visit to and around a place',ex:'We went on a tour of the old city and visited all the famous sites.'},
+  {w:'unpack',pos:'v',e:'🧳',def:'to take things out of a bag, box, etc.',ex:'She unpacked her suitcase as soon as she arrived at the hotel.'},
+  {w:'on board',pos:'phr',e:'🚢',def:'on a boat, train, aircraft, etc.',ex:'All passengers on board were asked to fasten their seatbelts.'},
+  {w:'on display',pos:'phr',e:'🖼️',def:'if something is on display, it is there for people to look at',ex:'The ancient artefacts were on display in the museum.'},
+  {w:'on foot',pos:'phr',e:'🚶',def:'if you go somewhere on foot, you walk there',ex:'The town centre is small enough to explore on foot.'},
+  {w:'on my/your/his own',pos:'phr',e:'🧍',def:'alone',ex:'She travelled around Europe on her own for three months.'},
+  {w:'on purpose',pos:'phr',e:'🎯',def:'intentionally',ex:'He didn\'t break the camera on purpose — it was an accident.'},
+  {w:'on sale',pos:'phr',e:'🏷️',def:'available to buy in a shop',ex:'The new guidebook is on sale at all good bookshops.'},
+  {w:'on time',pos:'phr',e:'⏰',def:'not early or late',ex:'The train arrived on time, which was a pleasant surprise.'},
+]},
+{id:'u13',num:'Unit 13',title:'#NoFilter',topic:'Social media',color:'#be185d',words:[
+  {w:'block',pos:'v',e:'🚫',def:'if you block someone on social media, they can no longer see your page or contact you',ex:'She blocked him on all social media after they argued.'},
+  {w:'comment',pos:'v',e:'💬',def:'to write something in response to a social media post',ex:'Hundreds of people commented on her photo.'},
+  {w:'follow',pos:'v',e:'👣',def:'if you follow someone on social media, you choose to see everything that they post',ex:'She follows several travel bloggers for inspiration.'},
+  {w:'like',pos:'v',e:'❤️',def:'to show that you have read, and that you like, a social media post',ex:'Over 10,000 people liked his video in the first hour.'},
+  {w:'post',pos:'v',e:'📤',def:'to put something on a website or social media page',ex:'He posts photos of his travels every day on his blog.'},
+  {w:'share',pos:'v',e:'↗️',def:'to put someone else\'s message on your social media page, or a friend\'s social media page',ex:'She shared an interesting article about climate change.'},
+  {w:'tag',pos:'v',e:'🏷️',def:'if you tag someone in a social media post, you include their name or username',ex:'She tagged all her friends in the group photo.'},
+  {w:'take down',pos:'phr vb',e:'🗑️',def:'to remove something from social media or the internet so it cannot be seen any more',ex:'He took down the post after people complained about it.'},
+  {w:'in advance',pos:'phr',e:'📅',def:'before a particular time',ex:'You need to book tickets in advance — they sell out quickly.'},
+  {w:'in detail',pos:'phr',e:'🔍',def:'including every part of something',ex:'The teacher explained the homework task in detail.'},
+  {w:'in fact',pos:'phr',e:'💡',def:'really',ex:'In fact, the photo wasn\'t filtered at all — the sky really was that colour.'},
+  {w:'in future',pos:'phr',e:'🔮',def:'beginning from now',ex:'In future, she decided to think before posting anything online.'},
+  {w:'in general',pos:'phr',e:'🌍',def:'usually, or in most situations',ex:'In general, social media can be positive if used carefully.'},
+  {w:'in particular',pos:'phr',e:'⭐',def:'especially',ex:'She was interested in photography, in particular landscape photography.'},
+  {w:'in the end',pos:'phr',e:'🏁',def:'finally, after something has been thought about or discussed a lot',ex:'In the end, she decided to delete her social media accounts.'},
+]},
+{id:'u14',num:'Unit 14',title:"Let's cook!",topic:'Verbs for cooking',color:'#e03030',words:[
+  {w:'bake',pos:'v',e:'🥖',def:'to cook something such as bread or a cake with dry heat in an oven',ex:'She baked a chocolate cake for her friend\'s birthday.'},
+  {w:'barbecue',pos:'v',e:'🍖',def:'to cook food on a barbecue',ex:'They barbecued burgers and chicken in the garden on a hot summer evening.'},
+  {w:'bite',pos:'v',e:'😬',def:'to cut something using your teeth',ex:'He bit into the apple and it tasted delicious.'},
+  {w:'boil',pos:'v',e:'💧',def:'to cook food in water that is boiling',ex:'Boil the pasta for 10 minutes until it is soft.'},
+  {w:'burn',pos:'v',e:'🔥',def:'if something you are cooking burns, it cooks too much',ex:'I left the toast too long and it burned.'},
+  {w:'freeze',pos:'v',e:'❄️',def:'to make food last a long time by making it very cold and hard',ex:'She cooked a big batch of soup and froze half of it for later.'},
+  {w:'fry',pos:'v',e:'🍳',def:'to cook something in hot oil or fat, or to be cooked in hot oil or fat',ex:'He fried the onions in butter until they were golden.'},
+  {w:'grill',pos:'v',e:'🥩',def:'to cook food on a flat, metal structure over a fire',ex:'She grilled the fish with lemon and herbs.'},
+  {w:'roast',pos:'v',e:'🍗',def:'to cook food in an oven or over a fire',ex:'They roasted a chicken with vegetables for Sunday lunch.'},
+  {w:'steam',pos:'v',e:'♨️',def:'to cook something using steam (the gas that water makes when you heat it)',ex:'She steamed the broccoli instead of boiling it to keep the nutrients.'},
+  {w:'stir',pos:'v',e:'🥄',def:'to mix food or liquid by moving a spoon round and round in it',ex:'Stir the sauce continuously so it doesn\'t stick to the pan.'},
+  {w:'taste',pos:'v',e:'😋',def:'to put food or drink in your mouth to find out what its flavour is like',ex:'Taste the soup before serving it to check the seasoning.'},
+]},
+{id:'u15',num:'Unit 15',title:'City or country?',topic:'Artificial and natural world',color:'#1fa060',words:[
+  {w:'air conditioning',pos:'n',e:'❄️',def:'a system that keeps the air cool in a building or car',ex:'The office has air conditioning so it stays cool even in summer.'},
+  {w:'bug',pos:'n',e:'🐛',def:'a small insect',ex:'She found a bug on her bedroom window and carefully put it outside.'},
+  {w:'facilities',pos:'n',e:'🏢',def:'buildings, equipment, or services that are provided for a particular purpose',ex:'The sports centre has excellent facilities including a pool and gym.'},
+  {w:'health centre',pos:'n',e:'🏥',def:'a building with several doctors where people go to visit them',ex:'She made an appointment at the health centre to see her doctor.'},
+  {w:'historic buildings',pos:'n',e:'🏰',def:'old buildings that are likely to be important in history',ex:'The city is famous for its historic buildings dating back 500 years.'},
+  {w:'modern architecture',pos:'n',e:'🏙️',def:'buildings using the newest ideas, design, technology, etc.',ex:'The new museum is a great example of modern architecture.'},
+  {w:'open spaces',pos:'n',e:'🌳',def:'land, especially in a town, that has no buildings on it',ex:'The city has created new open spaces for residents to enjoy.'},
+  {w:'pollution',pos:'n',e:'🏭',def:'damage caused to water, air, etc. by harmful substances or waste',ex:'Air pollution in the city has improved since cars were banned from the centre.'},
+  {w:'ruins',pos:'n',e:'🏚️',def:'the broken parts that are left from an old building or town',ex:'The ruins of the ancient temple are now a popular tourist attraction.'},
+  {w:'season',pos:'n',e:'🍂',def:'one of the four periods of the year: winter, spring, summer or autumn',ex:'Spring is the most beautiful season in this part of the country.'},
+  {w:'street light',pos:'n',e:'💡',def:'a light on a tall post next to a street',ex:'The street lights came on automatically at sunset.'},
+  {w:'valley',pos:'n',e:'🏔️',def:'an area of low land between hills or mountains',ex:'The small village is hidden in a green valley between two mountains.'},
+  {w:'wildlife',pos:'n',e:'🦊',def:'animals, birds and plants living in their natural environment',ex:'The national park is home to an incredible variety of wildlife.'},
+  {w:'catch up with someone',pos:'phr vb',e:'☕',def:'to meet someone you know after not seeing them for a while and talk about things you have done',ex:'We met for coffee to catch up with each other after the summer.'},
+  {w:'end up',pos:'phr vb',e:'🏁',def:'to finally be in a particular place or situation',ex:'We ended up staying at the hotel for an extra night because of the storm.'},
+  {w:'move in',pos:'phr vb',e:'🏠',def:'to begin living in a new home',ex:'They moved in to their new house last Saturday.'},
+  {w:'move out',pos:'phr vb',e:'📦',def:'to stop living in a particular home',ex:'She moved out of her parents\' house when she started university.'},
+  {w:'show someone around',pos:'phr vb',e:'🗺️',def:'to lead someone through a place',ex:'He showed us around the city and took us to all the best spots.'},
+  {w:'stay in',pos:'phr vb',e:'🛋️',def:'to stay in your home',ex:'It was raining so we decided to stay in and watch a film.'},
+]},
+{id:'u16',num:'Unit 16',title:'Lights, camera, action!',topic:'Film vocabulary',color:'#0891b2',words:[
+  {w:'animated',pos:'adj',e:'🎨',def:'an animated film is one in which drawings and models seem to move',ex:'The animated film was beautiful — the characters looked incredibly real.'},
+  {w:'appear',pos:'v',e:'🎬',def:'to perform in a film, play, etc.',ex:'She appeared in her first professional film at the age of 16.'},
+  {w:'come out',pos:'phr vb',e:'🎥',def:'if a book, album, film, etc. comes out, it becomes available for people to buy or see',ex:'The sequel to the film comes out next month.'},
+  {w:'direct',pos:'v',e:'🎬',def:'to tell the actors in a film or play what to do',ex:'She directed her first feature film when she was just 25.'},
+  {w:'director',pos:'n',e:'🎬',def:'someone who tells the actors in a film or play what to do',ex:'The director spent three years making this documentary.'},
+  {w:'musical',pos:'n',e:'🎵',def:'a play or film in which singing and dancing tell part of the story',ex:'We went to see the musical in the West End and loved every song.'},
+  {w:'performance',pos:'n',e:'🌟',def:'acting, singing, dancing or playing music to entertain people',ex:'Her performance in the lead role was incredibly powerful.'},
+  {w:'recording',pos:'n',e:'🎙️',def:'sounds or moving pictures that have been recorded, or the process of recording',ex:'The recording of the new album took six months to complete.'},
+  {w:'role',pos:'n',e:'🎭',def:'a part in a play or film',ex:'She played the role of the detective in the crime thriller.'},
+  {w:'soundtrack',pos:'n',e:'🎵',def:'the music used in a film',ex:'The soundtrack to the film won an Academy Award.'},
+  {w:'announce',pos:'v',e:'📢',def:'to tell people about something officially or with force or confidence',ex:'The director announced that filming would begin in January.'},
+  {w:'demand',pos:'v',e:'✊',def:'to ask for something in a way that shows you do not expect to be refused',ex:'The star demanded a private dressing room and extra security.'},
+  {w:'explain',pos:'v',e:'🗣️',def:'to make something clear or easy to understand by giving reasons or details',ex:'The director explained the scene to the actors before filming.'},
+  {w:'insist',pos:'v',e:'🤝',def:'to demand that something must be done or that you must have a particular thing',ex:'She insisted on doing all her own stunts in the action film.'},
+  {w:'suggest',pos:'v',e:'💡',def:'to express an idea or plan for someone to consider',ex:'The producer suggested changing the ending to make it more exciting.'},
+]},
+{id:'u17',num:'Unit 17',title:'Getting the message',topic:'Verbs of communication',color:'#7c3aed',words:[
+  {w:'apologise',pos:'v',e:'🙏',def:'to tell someone that you are sorry about something you have done',ex:'She apologised for being late to the meeting.'},
+  {w:'complain',pos:'v',e:'😤',def:'to say that something is wrong or that you are annoyed about something',ex:'He complained to the manager about the cold food.'},
+  {w:'disagree',pos:'v',e:'🤔',def:'to have a different opinion from someone else about something',ex:'They disagreed about the best way to solve the problem.'},
+  {w:'joke',pos:'v',e:'😂',def:'to say funny things, or not be serious',ex:'He was only joking — he didn\'t really mean what he said.'},
+  {w:'promise',pos:'v',e:'🤞',def:'to say that you will certainly do something or that something will certainly happen',ex:'She promised to call as soon as she arrived safely.'},
+  {w:'remind',pos:'v',e:'🔔',def:'to make someone remember something, or to remember to do something',ex:'Please remind me to buy milk on the way home.'},
+  {w:'warn',pos:'v',e:'⚠️',def:'to tell someone that something bad may happen in the future, so that they can prevent it',ex:'The weather forecast warned of heavy snow in the mountains.'},
+  {w:'wonder',pos:'v',e:'🤔',def:'to want to know something or to try to understand the reason for something',ex:'I wonder what the weather will be like at the weekend.'},
+]},
+{id:'u18',num:'Unit 18',title:'We love celebs!',topic:'Personal feelings and qualities',color:'#e06a00',words:[
+  {w:'annoyed',pos:'adj',e:'😤',def:'slightly angry',ex:'She was annoyed when her friend forgot their plans to meet.'},
+  {w:'charming',pos:'adj',e:'😊',def:'pleasant or attractive',ex:'He is charming — everyone who meets him likes him immediately.'},
+  {w:'curious',pos:'adj',e:'🔍',def:'wanting to know or learn about something',ex:'She was curious about the new student who had joined their class.'},
+  {w:'delighted',pos:'adj',e:'😁',def:'very pleased',ex:'He was delighted when he found out he had passed all his exams.'},
+  {w:'lonely',pos:'adj',e:'😔',def:'unhappy because you are not with other people',ex:'She felt lonely when all her friends went on holiday without her.'},
+  {w:'be mad (about)',pos:'adj',e:'❤️',def:'to love someone or something',ex:'She is absolutely mad about horses and rides every weekend.'},
+  {w:'nasty',pos:'adj',e:'😈',def:'unkind',ex:'It was nasty of him to make fun of her in front of everyone.'},
+  {w:'professional',pos:'adj',e:'💼',def:'showing skill and careful attention',ex:'She was very professional in the interview and impressed the whole panel.'},
+  {w:'rude',pos:'adj',e:'😒',def:'behaving in a way that is not polite',ex:'It was rude of him to leave the party without saying goodbye to the host.'},
+  {w:'shy',pos:'adj',e:'🙈',def:'not confident, especially about meeting or talking to new people',ex:'She was shy at first but quickly became more comfortable.'},
+  {w:'stressful',pos:'adj',e:'😰',def:'making you stressed',ex:'The week before exams is the most stressful time of the year.'},
+  {w:'unexpected',pos:'adj',e:'😲',def:'something that is unexpected surprises you because you did not know it was going to happen',ex:'Winning the prize was totally unexpected — she hadn\'t even told anyone she had entered.'},
+  {w:'according to',pos:'prep',e:'📰',def:'as said by someone or shown by something',ex:'According to the news, the concert was cancelled due to bad weather.'},
+  {w:'because of',pos:'prep',e:'🔗',def:'as a result of someone or something',ex:'The match was cancelled because of heavy rain.'},
+  {w:'besides',pos:'prep',e:'➕',def:'in addition to something or someone',ex:'Besides acting, she also writes her own music.'},
+  {w:'despite',pos:'prep',e:'💪',def:'used to say that something happened or is true although something else makes it seem not probable',ex:'Despite the rain, hundreds of fans waited outside the theatre.'},
+  {w:'instead of',pos:'prep',e:'🔄',def:'in place of someone or something',ex:'Instead of flying, they decided to take the train to see the countryside.'},
+  {w:'unless',pos:'conj',e:'❓',def:'except if',ex:'You won\'t get better unless you rest and drink plenty of water.'},
+]},
+{id:'u19',num:'Unit 19',title:'The world of work',topic:'Work tasks',color:'#1a6fd4',words:[
+  {w:'arrange',pos:'v',e:'📋',def:'to make the necessary plans and preparations for something to happen',ex:'She arranged a meeting with all the team members for Friday morning.'},
+  {w:'calculate',pos:'v',e:'🧮',def:'to discover an amount or number by using mathematics',ex:'He calculated that the project would take three months to complete.'},
+  {w:'deal with',pos:'phr vb',e:'🤝',def:'to take action in order to achieve something or to solve a problem',ex:'The manager deals with any complaints from customers personally.'},
+  {w:'deliver',pos:'v',e:'📦',def:'to take something to a person or place',ex:'The courier delivered the package within 24 hours.'},
+  {w:'develop',pos:'v',e:'📈',def:'to make something new such as a product',ex:'The company developed a new app to help students organise their studies.'},
+  {w:'handle',pos:'v',e:'✋',def:'to deal with something',ex:'She handles all social media communications for the company.'},
+  {w:'install',pos:'v',e:'💻',def:'to put software onto a computer',ex:'He installed the new programme and it worked perfectly.'},
+  {w:'manage',pos:'v',e:'👔',def:'to be in control of an office, shop, team, etc.',ex:'She manages a team of 20 people at the marketing company.'},
+  {w:'organise',pos:'v',e:'📅',def:'to plan or arrange something',ex:'He organised the whole event in just two weeks.'},
+  {w:'produce',pos:'v',e:'🏭',def:'to make or grow something',ex:'The factory produces 5,000 cars per week.'},
+  {w:'run',pos:'v',e:'🏃',def:'to organise or control something',ex:'She runs her own small business from home.'},
+  {w:'update',pos:'v',e:'🔄',def:'to add new information',ex:'Please update your profile with your current contact details.'},
+]},
+{id:'u20',num:'Unit 20',title:'Making plans',topic:'Hopes and dreams',color:'#059669',words:[
+  {w:'achieve',pos:'v',e:'🎯',def:'to succeed in doing something good, usually by working hard',ex:'She worked for years to achieve her dream of becoming a doctor.'},
+  {w:'admire',pos:'v',e:'👀',def:'to respect or approve of someone or something',ex:'I really admire people who manage to study and work at the same time.'},
+  {w:'aim',pos:'v',e:'🎯',def:'to intend to achieve something',ex:'He aims to run a marathon before he turns 30.'},
+  {w:'choose',pos:'v',e:'🤔',def:'to decide to do something',ex:'She chose to study abroad for a year to improve her language skills.'},
+  {w:'dream',pos:'v',e:'💭',def:'to imagine something that you would like to happen',ex:'She dreamed of one day performing at a famous concert hall.'},
+  {w:'encourage',pos:'v',e:'🤝',def:'to make someone more likely to do something, or to make something more likely to happen',ex:'Her teacher encouraged her to apply for the scholarship.'},
+  {w:'imagine',pos:'v',e:'✨',def:'to create an idea or picture of something in your mind',ex:'Imagine how different life will be in 50 years.'},
+  {w:'try your best',pos:'phr vb',e:'💪',def:'to make the greatest effort possible',ex:'Even if you don\'t win, try your best and you will feel proud.'},
+  {w:'believe in',pos:'phr vb',e:'❤️',def:'to be confident that something is effective or right',ex:'She believes in herself and that\'s why she always succeeds.'},
+  {w:'depend on',pos:'phr vb',e:'🔗',def:'if something depends on someone or something, it is influenced by them or changes because of them',ex:'Your success depends on how much effort you put in.'},
+  {w:'go for',pos:'phr vb',e:'🚀',def:'to try to achieve something',ex:'She decided to go for first place even though it seemed impossible.'},
+  {w:'get into',pos:'phr vb',e:'🏛️',def:'to succeed in being chosen or elected for a position in a school or other organisation',ex:'He worked incredibly hard and finally got into his first-choice university.'},
+  {w:'join in',pos:'phr vb',e:'🙋',def:'to become involved in an activity with other people',ex:'Don\'t be shy — join in and you\'ll enjoy it.'},
+  {w:'keep on',pos:'phr vb',e:'🔄',def:'to continue to do something, or to do something again and again',ex:'Keep on practising and you will improve every week.'},
+  {w:'miss out',pos:'phr vb',e:'😢',def:'to not do or have something that you would enjoy, or that other people do or have',ex:'She didn\'t want to miss out on the school trip so she saved her pocket money.'},
+  {w:'work out',pos:'phr vb',e:'🧩',def:'to understand something or decide something after thinking carefully',ex:'She worked out the answer to the problem after thinking about it overnight.'},
+]},
+];
+
+// ═══════════════════════════════════════════
+//  UNIT COLOURS MAP
+// ═══════════════════════════════════════════
+const COLORS=['#e03030','#1a6fd4','#1fa060','#7c3aed','#e06a00','#be185d','#0891b2','#059669','#7c3aed','#1fa060','#0891b2','#d97706','#be185d','#e03030','#1fa060','#0891b2','#7c3aed','#e06a00','#1a6fd4','#059669'];
+
+// ═══════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════
+function makeHint(w){return w.split(' ').map(p=>p.length<=1?p:p[0]+'_'.repeat(p.length-1)).join(' ');}
+function stemOf(w){w=w.toLowerCase();for(const[s,r]of[['ied','y'],['ies','y'],['ving','v'],['sing','s'],['zing','z'],['cing','c'],['pping','p'],['tting','t'],['nning','n'],['rring','r'],['lling','l'],['gging','g'],['mming','m'],['ssing','ss'],['sed','s'],['ing',''],['ed',''],['es',''],['s',''],['d',''],['e','']]){if(w.endsWith(s)&&w.length-s.length>=3)return w.slice(0,w.length-s.length)+r;}return w;}
+function sm(a,b){const sa=stemOf(a),sb=stemOf(b);if(sa===sb)return true;const ml=Math.min(sa.length,sb.length);return ml>=4&&(sa.startsWith(sb.slice(0,ml))||sb.startsWith(sa.slice(0,ml)));}
+function findIn(ex,word){const tw=word.trim().split(/\s+/),n=tw.length,toks=[];const re=/(\w[\w'-]*|\W+)/g;let m;while((m=re.exec(ex))!==null)toks.push({text:m[0],start:m.index,end:m.index+m[0].length,isW:/\w/.test(m[0])});const wt=toks.filter(t=>t.isW);for(let i=0;i<=wt.length-n;i++){let ok=true;for(let j=0;j<n;j++){const t=tw[j].toLowerCase(),s=wt[i+j].text.toLowerCase();if(j===0){if(!sm(t,s)){ok=false;break;}}else{if(s!==t){ok=false;break;}}}if(ok)return{start:wt[i].start,end:wt[i+n-1].end,matched:ex.slice(wt[i].start,wt[i+n-1].end)};}return null;}
+function hintHTML(ex,w){const f=findIn(ex,w);if(!f)return ex+` <span class="card-blank">${makeHint(w)}</span>`;return ex.slice(0,f.start)+`<span class="card-blank">${makeHint(f.matched)}</span>`+ex.slice(f.end);}
+function blankHTML(ex,w){const f=findIn(ex,w);if(!f)return ex+' <span class="card-blank">_____</span>';return ex.slice(0,f.start)+'<span class="card-blank">_____</span>'+ex.slice(f.end);}
+function textHint(ex,w){const f=findIn(ex,w);if(!f)return ex+' ['+makeHint(w)+']';return ex.slice(0,f.start)+makeHint(f.matched)+ex.slice(f.end);}
+function getCF(ex,w){const f=findIn(ex,w);return f?f.matched:w;}
+function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}return r;}
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+let CU=null,CM=null,words=[],idx=0,sc=0,streak=0,fcK=0,fcD=0,fcFlipped=false,answered=false;
+let unPicked=[],unLM=[];
+
+// ═══════════════════════════════════════════
+//  SCREENS
+// ═══════════════════════════════════════════
+function SS(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+function goBack(){if(CM){showUP();return;}showHome();}
+function showHome(){CU=null;CM=null;document.getElementById('back-btn').style.display='none';SS('home');renderHome();}
+function showUP(){CM=null;const u=CU;document.getElementById('back-btn').style.display='block';document.getElementById('up-label').textContent=u.num;document.getElementById('up-label').style.color=u.color;document.getElementById('up-title').textContent=u.title;document.getElementById('up-sub').textContent=u.topic+' · '+u.words.length+' words';document.querySelectorAll('.mode-tile').forEach(t=>t.style.setProperty('--unit-color',u.color));document.documentElement.style.setProperty('--unit-color',u.color);SS('unit-page');}
+
+// ═══════════════════════════════════════════
+//  HOME
+// ═══════════════════════════════════════════
+function renderHome(){
+  const g=document.getElementById('units-grid');g.innerHTML='';
+  UNITS.forEach(u=>{
+    const c=document.createElement('div');c.className='unit-card';
+    c.style.setProperty('--unit-color',u.color);
+    c.innerHTML=`<div class="uc-num">${u.num}</div><div class="uc-title">${u.title}</div><div class="uc-sub">${u.topic}</div><div class="uc-count">${u.words.length} words</div>`;
+    c.onclick=()=>{CU=u;showUP();};g.appendChild(c);
+  });
+}
+
+// ═══════════════════════════════════════════
+//  MODE START
+// ═══════════════════════════════════════════
+function startMode(m){CM=m;document.getElementById('back-btn').style.display='block';document.documentElement.style.setProperty('--unit-color',CU.color);words=shuffle([...CU.words]);idx=0;sc=0;streak=0;fcK=0;fcD=0;answered=false;if(m==='flash')sFlash();else if(m==='quiz')sQuiz();else if(m==='unscramble')sUn();else if(m==='fill')sFill();else if(m==='write')sWrite();}
+
+// ═══════════════════════════════════════════
+//  FLASH
+// ═══════════════════════════════════════════
+function sFlash(){SS('flash-screen');document.getElementById('fl-area').style.display='block';document.getElementById('fl-res').style.display='none';flShow();}
+function flShow(){if(idx>=words.length){flRes();return;}const w=words[idx];fcFlipped=false;document.getElementById('fl-ci').classList.remove('flipped');document.getElementById('fl-btns').style.display='none';const pct=Math.round(idx/words.length*100);document.getElementById('fl-prog').style.width=pct+'%';document.getElementById('fl-ctr').textContent=(idx+1)+'/'+words.length;document.getElementById('fl-k').textContent=fcK;document.getElementById('fl-d').textContent=fcD;document.getElementById('fl-pos').textContent=w.pos;document.getElementById('fl-em').textContent=w.e||'📖';document.getElementById('fl-sent').innerHTML=hintHTML(w.ex,w.w);document.getElementById('fl-wb').textContent=w.w;document.getElementById('fl-posb').textContent='('+w.pos+')';document.getElementById('fl-db').textContent=w.def;}
+function flipCard(){if(fcFlipped)return;fcFlipped=true;document.getElementById('fl-ci').classList.add('flipped');document.getElementById('fl-btns').style.display='flex';}
+function fcAns(k){if(k)fcK++;else fcD++;idx++;flShow();}
+function flRes(){document.getElementById('fl-area').style.display='none';document.getElementById('fl-res').style.display='block';document.getElementById('fl-rk').textContent=fcK;document.getElementById('fl-rd').textContent=fcD;const p=Math.round(fcK/words.length*100);document.getElementById('fl-rmsg').textContent=p>=80?`You know ${p}% — great work!`:p>=50?`Good start! Review the ones you\'re still learning.`:'Keep going — review and try again!';}
+
+// ═══════════════════════════════════════════
+//  QUIZ
+// ═══════════════════════════════════════════
+function sQuiz(){SS('quiz-screen');document.getElementById('qz-area').style.display='block';document.getElementById('qz-res').style.display='none';qzShow();}
+function qzShow(){if(idx>=words.length){qzRes();return;}const w=words[idx];answered=false;document.getElementById('qz-fb').textContent='';document.getElementById('qz-fb').className='fb-line';document.getElementById('qz-next').classList.remove('show');document.getElementById('qz-sc').textContent=sc;document.getElementById('qz-st').textContent=streak;const pct=Math.round(idx/words.length*100);document.getElementById('qz-prog').style.width=pct+'%';document.getElementById('qz-ctr').textContent=(idx+1)+'/'+words.length;const ud=Math.random()<0.5;document.getElementById('qz-lbl').textContent=ud?'Which word matches the definition?':'Which word fits the sentence?';document.getElementById('qz-em').textContent=w.e||'📖';document.getElementById('qz-q').innerHTML=ud?w.def:hintHTML(w.ex,w.w);const pool=words.filter(x=>x.w!==w.w);const opts=shuffle([w.w,...shuffle(pool).slice(0,5).map(x=>x.w)]);const g=document.getElementById('qz-opts');g.innerHTML='';opts.forEach(o=>{const b=document.createElement('button');b.className='qz-opt';b.textContent=o;b.onclick=()=>qzAns(o,w.w,b);g.appendChild(b);});}
+function qzAns(c,r,btn){if(answered)return;answered=true;const fb=document.getElementById('qz-fb');if(c===r){btn.classList.add('correct');sc+=10+streak*2;streak++;fb.textContent='✓ Correct!'+(streak>1?' 🔥 x'+streak:'');fb.className='fb-line good';}else{btn.classList.add('wrong');streak=0;fb.textContent='✗ The answer was: '+r;fb.className='fb-line bad';document.querySelectorAll('.qz-opt').forEach(b=>{if(b.textContent===r)b.classList.add('show-r');});}document.querySelectorAll('.qz-opt').forEach(b=>b.classList.add('answered'));document.getElementById('qz-next').classList.add('show');document.getElementById('qz-sc').textContent=sc;document.getElementById('qz-st').textContent=streak;}
+function qzNext(){idx++;qzShow();}
+function qzRes(){document.getElementById('qz-area').style.display='none';document.getElementById('qz-res').style.display='block';const p=Math.round(sc/(words.length*12)*100);document.getElementById('qz-ric').textContent=p>=80?'🏆':p>=50?'🌟':'💪';document.getElementById('qz-rsc').innerHTML=`<div class="r-score">${sc} pts</div>`;document.getElementById('qz-rmsg').textContent=p>=80?'Excellent! You really know these words!':p>=50?'Good work! Try again to beat your score.':'Keep practising!';}
+
+// ═══════════════════════════════════════════
+//  UNSCRAMBLE
+// ═══════════════════════════════════════════
+function sUn(){SS('un-screen');document.getElementById('un-area').style.display='block';document.getElementById('un-res').style.display='none';unShow();}
+function unShow(){if(idx>=words.length){unRes();return;}const w=words[idx];unPicked=[];const pct=Math.round(idx/words.length*100);document.getElementById('un-prog').style.width=pct+'%';document.getElementById('un-ctr').textContent=(idx+1)+'/'+words.length;document.getElementById('un-em').textContent=w.e||'📖';document.getElementById('un-def').textContent=w.def;document.getElementById('un-fb').textContent='';document.getElementById('un-fb').className='fb-line';const letters=w.w.toUpperCase().split('');unLM=shuffle(letters.map((l,i)=>({l,i})));renderUnS(w.w);renderUnP();}
+function renderUnS(word){const s=document.getElementById('un-slots');s.innerHTML='';word.split('').forEach((ch,i)=>{if(ch===' '){const g=document.createElement('div');g.className='aslot gap';s.appendChild(g);}else{const sl=document.createElement('div');sl.className='aslot';sl.id='us'+i;sl.onclick=()=>unRm(i);s.appendChild(sl);}});}
+function renderUnP(){const p=document.getElementById('un-pool');p.innerHTML='';unLM.forEach((item,i)=>{if(item.l===' ')return;const b=document.createElement('button');b.className='lbtn';b.id='ulb'+i;b.textContent=item.l;b.onclick=()=>unPk(i);p.appendChild(b);});}
+function unPk(mi){const w=words[idx];const chars=w.w.split('');const ns=chars.findIndex((ch,i)=>ch!==' '&&!unPicked.find(p=>p.si===i));if(ns===-1)return;unPicked.push({mi,si:ns});const sl=document.getElementById('us'+ns);sl.textContent=unLM[mi].l;sl.classList.add('filled');document.getElementById('ulb'+mi).classList.add('used');}
+function unRm(si){const pk=unPicked.find(p=>p.si===si);if(!pk)return;unPicked=unPicked.filter(p=>p!==pk);const sl=document.getElementById('us'+si);sl.textContent='';sl.classList.remove('filled','ok','fail');document.getElementById('ulb'+pk.mi).classList.remove('used');}
+function unClear(){unPicked=[];const w=words[idx];w.w.split('').forEach((ch,i)=>{if(ch!==' '){const s=document.getElementById('us'+i);if(s){s.textContent='';s.classList.remove('filled','ok','fail');}}});unLM.forEach((_,i)=>{const b=document.getElementById('ulb'+i);if(b)b.classList.remove('used');});}
+function unCheck(){const w=words[idx];const chars=w.w.split('');const af=chars.every((ch,i)=>ch===' '||unPicked.find(p=>p.si===i));if(!af){setFB('un-fb','Fill all the letters first!','');return;}let ok=true;chars.forEach((ch,i)=>{if(ch===' ')return;const pk=unPicked.find(p=>p.si===i);const sl=document.getElementById('us'+i);if(pk&&unLM[pk.mi].l===ch.toUpperCase())sl.classList.add('ok');else{sl.classList.add('fail');ok=false;}});if(ok){sc+=10;setFB('un-fb','✓ Correct!','good');setTimeout(()=>{idx++;unShow();},1200);}else{setFB('un-fb','✗ The answer was: '+w.w,'bad');setTimeout(()=>{idx++;unShow();},2000);}}
+function unRes(){document.getElementById('un-area').style.display='none';document.getElementById('un-res').style.display='block';document.getElementById('un-rsc').innerHTML=`<div class="r-score">${sc} pts</div>`;document.getElementById('un-rmsg').textContent=sc>=words.length*8?'Perfect! 🎉':'Good try! Play again to improve.';}
+
+// ═══════════════════════════════════════════
+//  FILL
+// ═══════════════════════════════════════════
+function sFill(){SS('fill-screen');document.getElementById('fi-area').style.display='block';document.getElementById('fi-res').style.display='none';fiShow();}
+function fiShow(){if(idx>=words.length){fiRes();return;}const w=words[idx];answered=false;const pct=Math.round(idx/words.length*100);document.getElementById('fi-prog').style.width=pct+'%';document.getElementById('fi-ctr').textContent=(idx+1)+'/'+words.length;const cf=getCF(w.ex,w.w);document.getElementById('fi-hint').textContent=makeHint(cf);document.getElementById('fi-pos').textContent='('+w.pos+')';document.getElementById('fi-ctx').textContent='"'+textHint(w.ex,w.w)+'"';document.getElementById('fi-in').value='';document.getElementById('fi-in').className='txt-input';setFB('fi-fb','','');document.getElementById('fi-next').classList.remove('show');setTimeout(()=>document.getElementById('fi-in').focus(),100);}
+function fiCheck(){if(answered)return;const w=words[idx];const v=document.getElementById('fi-in').value.trim();if(!v)return;answered=true;const cf=getCF(w.ex,w.w);const ok=v.toLowerCase()===cf.toLowerCase()||v.toLowerCase()===w.w.toLowerCase();document.getElementById('fi-in').className='txt-input '+(ok?'ok':'fail');if(ok){sc+=10;setFB('fi-fb','✓ Correct!','good');}else setFB('fi-fb','✗ The answer was: '+cf,'bad');document.getElementById('fi-next').classList.add('show');}
+function fiNext(){idx++;fiShow();}
+function fiRes(){document.getElementById('fi-area').style.display='none';document.getElementById('fi-res').style.display='block';document.getElementById('fi-rsc').innerHTML=`<div class="r-score">${sc} pts</div>`;const p=Math.round(sc/(words.length*10)*100);document.getElementById('fi-rmsg').textContent=p>=80?'Excellent! 🌟':p>=50?'Good effort!':'Keep practising! 💪';}
+
+// ═══════════════════════════════════════════
+//  WRITE
+// ═══════════════════════════════════════════
+function sWrite(){SS('write-screen');document.getElementById('wr-area').style.display='block';document.getElementById('wr-res').style.display='none';wrShow();}
+function wrShow(){if(idx>=words.length){wrRes();return;}const w=words[idx];answered=false;const pct=Math.round(idx/words.length*100);document.getElementById('wr-prog').style.width=pct+'%';document.getElementById('wr-ctr').textContent=(idx+1)+'/'+words.length;document.getElementById('wr-em').textContent=w.e||'📖';document.getElementById('wr-def').textContent=w.def;document.getElementById('wr-ex').innerHTML='"'+blankHTML(w.ex,w.w)+'"';document.getElementById('wr-in').value='';document.getElementById('wr-in').className='txt-input';setFB('wr-fb','','');document.getElementById('wr-next').classList.remove('show');setTimeout(()=>document.getElementById('wr-in').focus(),100);}
+function wrCheck(){if(answered)return;const w=words[idx];const v=document.getElementById('wr-in').value.trim();if(!v)return;answered=true;const cf=getCF(w.ex,w.w);const ok=v.toLowerCase()===cf.toLowerCase()||v.toLowerCase()===w.w.toLowerCase();document.getElementById('wr-in').className='txt-input '+(ok?'ok':'fail');if(ok){sc+=10;setFB('wr-fb','✓ Correct!','good');}else setFB('wr-fb','✗ The answer was: '+cf,'bad');document.getElementById('wr-next').classList.add('show');}
+function wrNext(){idx++;wrShow();}
+function wrRes(){document.getElementById('wr-area').style.display='none';document.getElementById('wr-res').style.display='block';document.getElementById('wr-rsc').innerHTML=`<div class="r-score">${sc} pts</div>`;const p=Math.round(sc/(words.length*10)*100);document.getElementById('wr-rmsg').textContent=p>=80?'🏆 Amazing — you aced it!':p>=50?'🌟 Good work! Try again.':'💪 Keep studying!';}
+
+// ═══════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════
+function setFB(id,t,tp){const el=document.getElementById(id);el.textContent=t;el.className='fb-line'+(tp?' '+tp:'');}
+let tT;
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),2400);}
+
+// ── INIT ──
+renderHome();
+</script>
+</body>
+</html>
